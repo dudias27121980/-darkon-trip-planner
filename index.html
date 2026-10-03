@@ -278,6 +278,76 @@ input[type=range]:focus-visible{outline:3px solid var(--sign);outline-offset:6px
 footer{margin-top:48px;border-top:1px solid var(--line);padding-block:26px 34px;color:var(--muted);font-size:13.5px}
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 
+
+/* ---------- Leaflet core (inlined) ---------- */
+.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane>svg,.leaflet-pane>canvas,.leaflet-zoom-box,.leaflet-image-layer,.leaflet-layer{position:absolute;left:0;top:0}
+.leaflet-container{overflow:hidden;-webkit-tap-highlight-color:transparent;font-family:var(--f-body);outline-offset:1px}
+.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow{-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
+.leaflet-container img.leaflet-tile,.leaflet-container .leaflet-marker-pane img{max-width:none!important;max-height:none!important}
+.leaflet-container img.leaflet-tile{mix-blend-mode:normal;width:256px;height:256px}
+.leaflet-tile{filter:inherit;visibility:hidden}.leaflet-tile-loaded{visibility:inherit}
+.leaflet-pane{z-index:400}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-shadow-pane{z-index:500}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}.leaflet-popup-pane{z-index:700}
+.leaflet-control{position:relative;z-index:800;pointer-events:auto;float:left;clear:both}
+.leaflet-top,.leaflet-bottom{position:absolute;z-index:1000;pointer-events:none}.leaflet-top{top:0}.leaflet-right{right:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}
+.leaflet-right .leaflet-control{float:right;margin-right:10px}.leaflet-top .leaflet-control{margin-top:10px}.leaflet-bottom .leaflet-control{margin-bottom:10px}.leaflet-left .leaflet-control{margin-left:10px}
+.leaflet-zoom-animated{transform-origin:0 0}
+.leaflet-zoom-anim .leaflet-zoom-animated{transition:transform .25s cubic-bezier(0,0,.25,1)}
+.leaflet-zoom-anim .leaflet-tile,.leaflet-pan-anim .leaflet-tile{transition:none}
+.leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}
+.leaflet-interactive{cursor:pointer}.leaflet-grab{cursor:grab}.leaflet-dragging .leaflet-grab{cursor:move}
+.leaflet-marker-icon,.leaflet-popup-pane,.leaflet-control{cursor:auto}.leaflet-marker-icon.leaflet-interactive{cursor:pointer}
+.leaflet-bar{box-shadow:0 1px 5px rgba(0,0,0,.35);border-radius:10px;overflow:hidden}
+.leaflet-bar a{display:block;width:34px;height:34px;line-height:34px;text-align:center;text-decoration:none;background:var(--surface);color:var(--ink);font:600 18px/34px var(--f-mono);border-bottom:1px solid var(--line)}
+.leaflet-bar a:last-child{border-bottom:0}
+.leaflet-popup{position:absolute;text-align:center;margin-bottom:20px}
+.leaflet-popup-content-wrapper{padding:1px;text-align:right;border-radius:14px;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.leaflet-popup-content{margin:14px 16px;line-height:1.45;min-height:1px;font-size:14px}
+.leaflet-popup-tip-container{width:40px;height:20px;position:absolute;left:50%;margin-top:-1px;margin-left:-20px;overflow:hidden;pointer-events:none}
+.leaflet-popup-tip{width:17px;height:17px;padding:1px;margin:-10px auto 0;transform:rotate(45deg);background:var(--surface)}
+.leaflet-container a.leaflet-popup-close-button{position:absolute;top:0;left:0;border:none;text-align:center;width:28px;height:28px;font:18px/28px var(--f-mono);color:var(--muted);text-decoration:none;background:transparent}
+.leaflet-control-attribution{background:rgba(255,255,255,.8);margin:0;padding:0 6px;color:#333;font-size:10.5px}
+.leaflet-control-attribution a{color:#0b5394}
+
+/* ---------- Kosher & Chabad ---------- */
+.kosher{margin-top:34px;padding-top:28px;border-top:1px solid var(--line)}
+.k-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:18px}
+.k-title{font-family:var(--f-display);font-size:clamp(40px,5vw,58px);font-weight:700;line-height:.95}
+.k-tip{color:var(--muted);max-width:66ch;margin-top:8px}
+.k-legend{display:flex;gap:14px;font-size:13.5px;color:var(--muted);flex-wrap:wrap}
+.k-legend span{display:inline-flex;align-items:center;gap:6px}
+.k-dot{width:14px;height:14px;border-radius:50%;background:var(--ink);border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line)}
+.k-dot.ch{background:var(--sign)}
+.k-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
+.k-map{position:relative;height:460px;max-width:100%;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface-2);overflow:hidden}
+.k-map-note,.k-map-fallback{position:absolute;inset-inline:12px;bottom:12px;z-index:1100;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:13px;direction:rtl;text-align:right;box-shadow:var(--shadow)}
+.k-map-fallback{inset:auto 12px 50% 12px;transform:translateY(50%);display:flex;gap:8px;align-items:center}
+.k-pin{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:600 14px var(--f-mono);border:3px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,.35);transition:transform .2s}
+.k-pin.ch{background:var(--sign);color:var(--sign-ink)}
+.k-pin:hover{transform:scale(1.12)}
+.k-list{display:flex;flex-direction:column;gap:10px;max-height:460px;overflow:auto;padding-inline-end:4px}
+.k-city{flex:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.k-city-h{width:100%;display:flex;align-items:center;gap:10px;padding:12px 14px;border:0;background:var(--surface-2);cursor:pointer;font-weight:700;font-size:16px;text-align:start}
+.k-city-h:hover{background:color-mix(in oklab,var(--surface-2) 70%,var(--line))}
+.k-city-h .ic{width:18px;height:18px}
+.k-count{margin-inline-start:auto;font-family:var(--f-mono);font-size:12.5px;color:var(--muted);font-weight:500}
+.k-items{list-style:none;margin:0;padding:4px 0}
+.k-items li{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:10px 14px;border-top:1px solid var(--line)}
+.k-items li:first-child{border-top:0}
+.k-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--surface-2)}
+.k-ic.ch{background:var(--sign);color:var(--sign-ink)}
+.k-ic .ic{width:18px;height:18px}
+.k-name{font-weight:700;line-height:1.35;overflow-wrap:anywhere}
+.k-type{display:inline-block;font-size:11.5px;font-weight:700;padding:1px 8px;border-radius:999px;margin-inline-start:6px;vertical-align:middle}
+.t-meat{background:#FBE3E3;color:#9B1C1C}.t-dairy{background:#E1ECFB;color:#1C4E9B}.t-veg{background:var(--ok-bg);color:var(--ok)}.t-shop{background:var(--surface-2);color:var(--muted)}
+:root[data-theme="dark"] .t-meat{background:#3A1717;color:#FF9A9A}:root[data-theme="dark"] .t-dairy{background:#13243D;color:#9CC2FF}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .t-meat{background:#3A1717;color:#FF9A9A}:root:not([data-theme="light"]) .t-dairy{background:#13243D;color:#9CC2FF}}
+.k-addr{font-size:13px;color:var(--muted);direction:auto;overflow-wrap:anywhere}
+.k-note{font-size:13.5px;color:var(--ink);opacity:.85}
+.k-pop h4{font-size:15px;margin:0 0 6px}
+.k-pop ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.k-pop a{color:inherit;font-weight:600}
+@media (max-width:820px){.k-grid{grid-template-columns:1fr}.k-map{height:320px}.k-list{max-height:none}}
+
 @media (max-width:820px){
   .pass{grid-template-columns:1fr;-webkit-mask:none;mask:none}
   .pass-main{grid-template-columns:1fr;gap:14px;padding:20px}
@@ -340,6 +410,8 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
   <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="14" height="14" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21H3z"/><path d="M9 21v-6h6v6"/></symbol>
+  <symbol id="i-shop" viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9M3 9v11h18V9M3 9h18M9 20v-6h6v6"/></symbol>
 </svg>
 
 <div class="app" id="app" dir="rtl" lang="he">
@@ -428,6 +500,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
   </footer>
 </div>
 
+<script id="leafletJs" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" async onload="window.__lf=1" onerror="window.__lf=2"></script>
 <script>
 (() => {
 "use strict";
@@ -869,6 +942,139 @@ const C = [
 }
 ];
 
+/* ================= KOSHER & CHABAD (verified Oct 2026; marker = neighborhood/city level) ================= */
+const KOSHER = {
+ it:{tip:"ברומא יש את הבחירה הגדולה ביותר, ברובע היהודי (Via del Portico d'Ottavia). בשבת מזמינים ארוחה בבית חב״ד מראש.",cities:[
+  {city:"רומא",en:"Rome",lat:41.8925,lon:12.4775,items:[
+   {k:"chabad",n:"בית חב״ד רומא",q:"Chabad Rome"},
+   {k:"rest",n:"Ba'Ghetto",type:"meat",addr:"Via del Portico d'Ottavia 57"},
+   {k:"rest",n:"Ba'Ghetto Milky",type:"dairy",addr:"Via del Portico d'Ottavia 2/A"},
+   {k:"rest",n:"BellaCarne",type:"meat",addr:"Via del Portico d'Ottavia 51",note:"בשרים על האש ומטבח יהודי-רומאי"},
+   {k:"rest",n:"Casalino Osteria",type:"dairy",addr:"Via del Portico d'Ottavia 1E",note:"בהשגחת רבנות רומא"},
+   {k:"rest",n:"Bona Pizza",type:"dairy",addr:"Via del Portico d'Ottavia 7",note:"פיצה לפי משקל"}]},
+  {city:"ונציה",en:"Venice",lat:45.4446,lon:12.3263,items:[
+   {k:"chabad",n:"בית חב״ד ונציה",q:"Chabad of Venice"},
+   {k:"rest",n:"Gam Gam",type:"meat",addr:"Ghetto Vecchio 1122",note:"של חב״ד, בכניסה לגטו. 5 דקות הליכה מהרכבת"}]},
+  {city:"פירנצה",en:"Florence",lat:43.7708,lon:11.2665,items:[
+   {k:"chabad",n:"בית חב״ד פירנצה",q:"Chabad Florence"},
+   {k:"rest",n:"Ruth's",type:"veg",addr:"Via Luigi Carlo Farini 2/a",note:"צמחוני ודגים, ליד בית הכנסת. ארוחות שבת בהזמנה"},
+   {k:"rest",n:"Ba'Ghetto Firenze",type:"meat",addr:"Via Luigi Carlo Farini 5/r"}]},
+  {city:"מילאנו",en:"Milan",lat:45.4642,lon:9.19,items:[
+   {k:"chabad",n:"בית חב״ד מילאנו",q:"Chabad Milan"}]}]},
+ es:{tip:"בברצלונה ובמדריד יש מסעדות כשרות. בשאר הארץ, ובמיוחד באנדלוסיה, נשענים על בית חב״ד במרבייה.",cities:[
+  {city:"ברצלונה",en:"Barcelona",lat:41.3809,lon:2.1735,items:[
+   {k:"chabad",n:"בית חב״ד ברצלונה",q:"Chabad Barcelona"},
+   {k:"rest",n:"Maccabi",type:"meat",addr:"La Rambla 79",note:"של חב״ד, תפריט בעברית"},
+   {k:"rest",n:"Shani's Falafel",type:"veg",addr:"שוק לה בוקריה, דוכנים 133–134",note:"פלאפל טבעוני. א׳–ה׳ 11–17, ו׳ 11–15"}]},
+  {city:"מדריד",en:"Madrid",lat:40.4168,lon:-3.7038,items:[
+   {k:"chabad",n:"בית חב״ד מדריד",q:"Chabad Madrid",note:"ארוחות שבת בהרשמה באתר chabadmadrid.com"},
+   {k:"rest",n:"Fuego Kosher Steak House",type:"meat",addr:"Calle de San Lorenzo 9",note:"מהדרין"},
+   {k:"rest",n:"Hummus Kosher Food",type:"meat",addr:"Calle de Alburquerque 5"},
+   {k:"rest",n:"La Escudilla",type:"meat",addr:"Calle de la Santísima Trinidad 16"},
+   {k:"rest",n:"Barganzo",type:"veg",addr:"Calle de Colmenares 13"}]},
+  {city:"מרבייה",en:"Marbella",lat:36.5101,lon:-4.8825,items:[
+   {k:"chabad",n:"חב״ד קוסטה דל סול",q:"Chabad Costa del Sol Marbella",note:"מניינים יומיים ושבת. הכי קרוב לאנדלוסיה"}]},
+  {city:"ולנסיה",en:"Valencia",lat:39.4699,lon:-0.3763,items:[
+   {k:"chabad",n:"בית חב״ד ולנסיה",q:"Jabad Lubavitch Valencia"}]}]},
+ gr:{tip:"חב״ד אתונה שולח ארוחות כשרות לכל האיים, כולל סנטוריני ומיקונוס. מזמינים מראש.",cities:[
+  {city:"אתונה",en:"Athens",lat:37.9785,lon:23.7243,items:[
+   {k:"chabad",n:"בית חב״ד אתונה",q:"Chabad Athens Aisopou 10",addr:"Aisopou 10, Psyrri"},
+   {k:"rest",n:"Gostijo",type:"meat",addr:"Aisopou 10, Psyrri",note:"של חב״ד. יש גם מכולת כשרה במקום"}]},
+  {city:"סלוניקי",en:"Thessaloniki",lat:40.6401,lon:22.9444,items:[
+   {k:"chabad",n:"בית חב״ד סלוניקי",q:"Chabad Thessaloniki",addr:"Salaminos 9"},
+   {k:"rest",n:"Shalom",type:"meat",note:"בופה, בהשגחת חב״ד. המסעדה הכשרה היחידה בעיר"}]},
+  {city:"כרתים",en:"Hersonissos, Crete",lat:35.3167,lon:25.3833,items:[
+   {k:"chabad",n:"בית חב״ד כרתים",q:"Chabad Crete",note:"עונתי: מפסח עד סוף נובמבר"},
+   {k:"rest",n:"Yamnis",type:"meat",addr:"Anissaras, Hersonissos"}]},
+  {city:"רודוס",en:"Rhodes",lat:36.4341,lon:28.2176,items:[{k:"chabad",n:"בית חב״ד רודוס",q:"Chabad Rhodes"}]},
+  {city:"קורפו",en:"Corfu",lat:39.6243,lon:19.9217,items:[{k:"chabad",n:"בית חב״ד קורפו",q:"Chabad Corfu",addr:"Velissariou 24"}]},
+  {city:"מיקונוס",en:"Mykonos",lat:37.4467,lon:25.3289,items:[{k:"chabad",n:"בית חב״ד מיקונוס",q:"Chabad Mykonos"}]}]},
+ fr:{tip:"בפריז יש מאות מקומות כשרים. ברחוב רוזייה במארה יש כמה מקומות קרובים מאוד זה לזה.",cities:[
+  {city:"פריז · לה מארה",en:"Le Marais, Paris",lat:48.8572,lon:2.3592,items:[
+   {k:"chabad",n:"בתי חב״ד בפריז",q:"Chabad Paris Marais",note:"יש עשרות בעיר. בדקו את הקרוב למלון"},
+   {k:"rest",n:"L'As du Fallafel",type:"meat",addr:"34 Rue des Rosiers",note:"בהשגחת בית הדין של פריז"},
+   {k:"rest",n:"Chlew",type:"meat",addr:"26 Rue des Rosiers"},
+   {k:"rest",n:"Alfi",type:"meat",addr:"30 Rue du Roi de Sicile"},
+   {k:"rest",n:"Korcarz",type:"dairy",addr:"29 Rue des Rosiers",note:"מאפייה ובית קפה"}]},
+  {city:"ניס",en:"Nice",lat:43.7009,lon:7.2683,items:[
+   {k:"chabad",n:"בית חב״ד ניס",q:"Chabad Nice 22 Rue Rossini",addr:"22 Rue Rossini"},
+   {k:"rest",n:"Lechem Chamaym",type:"dairy",addr:"22 Rue Rossini",note:"של חב״ד: פסטות, פיצה ודגים"}]}]},
+ pt:{tip:"בפורטוגל מעט מקומות כשרים. מתכננים מראש, וחב״ד בקשקאיש מכין אוכל לקחת בהזמנה של 24 שעות מראש.",cities:[
+  {city:"ליסבון",en:"Lisbon",lat:38.7425,lon:-9.1460,items:[
+   {k:"rest",n:"Genesis",type:"meat",addr:"Campo Pequeno 41",note:"גלאט. א׳–ה׳ 12–22:30, ו׳ 10–16"},
+   {k:"rest",n:"Portuel",type:"shop",addr:"Rua Gomes Freire 146 A",note:"מכולת כשרה עם מנות מוכנות"}]},
+  {city:"קשקאיש",en:"Cascais",lat:38.6979,lon:-9.4215,items:[
+   {k:"chabad",n:"בית חב״ד ליסבון (בקשקאיש)",q:"Chabad Lisbon Cascais",note:"ארוחות שבת פעמיים בחודש, בהרשמה מראש"}]},
+  {city:"פורטו",en:"Porto",lat:41.1579,lon:-8.6291,items:[
+   {k:"rest",n:"כשרות בפורטו",type:"meat",q:"kosher Porto Jewish community",note:"הקהילה היהודית מפעילה מלון, מסעדה וקייטרינג כשרים"}]},
+  {city:"אלבופיירה",en:"Albufeira",lat:37.0891,lon:-8.2479,items:[
+   {k:"rest",n:"Noah Kosher Algarve",type:"meat",note:"מסעדה, קייטרינג ואוכל לשבת"}]}]},
+ gb:{tip:"רוב המקומות הכשרים נמצאים בגולדרס גרין שבצפון לונדון. כשרות KLBD היא הנפוצה.",cities:[
+  {city:"לונדון · גולדרס גרין",en:"Golders Green, London",lat:51.5724,lon:-0.1946,items:[
+   {k:"chabad",n:"בתי חב״ד בלונדון",q:"Chabad Golders Green",note:"יש רבים בעיר, גם במרכז"},
+   {k:"rest",n:"Novellino Bistro",type:"meat",note:"גלאט, KLBD"},
+   {k:"rest",n:"Hummus Bar",type:"meat",addr:"82 Golders Green Road",note:"KLBD"},
+   {k:"rest",n:"Beit Café",type:"dairy",addr:"119 Golders Green Road",note:"KLBD"},
+   {k:"rest",n:"Eli's Pizza",type:"dairy",addr:"2a Hoop Lane",note:"KLBD"},
+   {k:"rest",n:"Kosher Kingdom",type:"dairy",addr:"7 Russell Gardens",note:"KLBD"}]},
+  {city:"אדינבורו",en:"Edinburgh",lat:55.9465,lon:-3.2033,items:[
+   {k:"chabad",n:"בית חב״ד אדינבורו",q:"Chabad Edinburgh"},
+   {k:"rest",n:"Alba Kosher",type:"meat",addr:"35/37 Bread Street",note:"של חב״ד. מזמינים 48 שעות מראש"}]}]},
+ us:{tip:"בניו יורק ובמיאמי יש מאות מקומות כשרים. בלאס וגאס אין מסעדה כשרה על הסטריפ עצמו, רק בקרבתו.",cities:[
+  {city:"ניו יורק · מידטאון",en:"Midtown Manhattan",lat:40.7549,lon:-73.9840,items:[
+   {k:"chabad",n:"חב״ד מידטאון מנהטן",q:"Chabad of Midtown Manhattan"},
+   {k:"rest",n:"Tiberias",type:"meat",addr:"45 East 34th Street"},
+   {k:"rest",n:"Tabernacle Steakhouse",type:"meat",note:"סטייקים וסושי"},
+   {k:"rest",n:"Barnea Bistro",type:"meat",note:"כשרות OU"},
+   {k:"rest",n:"Miznon Kosher",type:"meat"}]},
+  {city:"מיאמי ביץ׳",en:"Miami Beach",lat:25.7907,lon:-80.1300,items:[
+   {k:"chabad",n:"בתי חב״ד במיאמי",q:"Chabad Miami Beach"},
+   {k:"rest",n:"Silan",type:"meat"},{k:"rest",n:"Motek",type:"meat"},{k:"rest",n:"Pita Loca",type:"meat"}]},
+  {city:"אורלנדו",en:"Orlando",lat:28.4500,lon:-81.4700,items:[
+   {k:"chabad",n:"בית חב״ד אורלנדו",q:"Chabad Orlando"},
+   {k:"rest",n:"Kosher Grill",type:"meat",addr:"5615 International Drive",note:"קרוב לפארקים"}]},
+  {city:"לאס וגאס",en:"Las Vegas",lat:36.1147,lon:-115.1728,items:[
+   {k:"chabad",n:"חב״ד לאס וגאס",q:"Chabad of Southern Nevada"},
+   {k:"rest",n:"Judit Mediterranean Cuisine",type:"meat",note:"גלאט, ליד הסטריפ"},
+   {k:"rest",n:"Shawarma Vegas",type:"meat",note:"גלאט"}]},
+  {city:"סן פרנסיסקו",en:"San Francisco",lat:37.7749,lon:-122.4194,items:[
+   {k:"chabad",n:"חב״ד סן פרנסיסקו",q:"Chabad San Francisco"},
+   {k:"rest",n:"Sabra Grill",type:"meat",note:"גלאט"},
+   {k:"rest",n:"Hummus Bodega",type:"meat"}]}]},
+ jp:{tip:"מחוץ לבתי חב״ד כמעט אין כשר. שירות Kosher Delica של חב״ד טוקיו שולח ארוחות כשרות לכל מלון ביפן.",cities:[
+  {city:"טוקיו",en:"Tokyo",lat:35.6467,lon:139.7101,items:[
+   {k:"chabad",n:"בית חב״ד טוקיו",q:"Chabad Tokyo Japan"},
+   {k:"rest",n:"Chana's Place",type:"meat",note:"בתוך בית חב״ד. המסעדה הכשרה היחידה ביפן עם ישיבה"},
+   {k:"rest",n:"David's Deli",type:"meat",note:"7 דקות מבית חב״ד"}]},
+  {city:"קיוטו",en:"Kyoto",lat:35.0116,lon:135.7681,items:[
+   {k:"chabad",n:"בית חב״ד קיוטו",q:"Chabad of Kyoto",note:"ארוחות בהזמנה 3 ימים מראש"}]},
+  {city:"אוסקה",en:"Namba, Osaka",lat:34.6659,lon:135.5013,items:[
+   {k:"chabad",n:"בית חב״ד אוסקה",q:"Chabad Osaka",note:"נפתח ב-2025 באזור נמבה"}]}]},
+ th:{tip:"בתאילנד שישה בתי חב״ד עם אוכל כשר. בקו סמוי יש מסעדה בשרית, מסעדה חלבית ומקווה.",cities:[
+  {city:"בנגקוק",en:"Khao San, Bangkok",lat:13.7590,lon:100.4977,items:[
+   {k:"chabad",n:"בית חב״ד אור מנחם",q:"Chabad Bangkok Ohr Menachem",addr:"96 Ram Buttri Rd (ליד קאו סאן)",note:"בניין של 5 קומות עם בית כנסת ומסעדה כשרה"}]},
+  {city:"צ׳יאנג מאי",en:"Chiang Mai",lat:18.7860,lon:99.0001,items:[
+   {k:"chabad",n:"בית חב״ד צ׳יאנג מאי",q:"Chabad Chiang Mai",addr:"189/15 Chang Klan Rd, ליד שוק הלילה"},
+   {k:"rest",n:"The Kosher Place",type:"meat",addr:"189/15 Chang Klan Rd"}]},
+  {city:"פאי",en:"Pai",lat:19.3590,lon:98.4400,items:[{k:"chabad",n:"בית חב״ד פאי",q:"Chabad Pai",note:"ארוחות שבת בהזמנה"}]},
+  {city:"פוקט",en:"Patong, Phuket",lat:7.8960,lon:98.2970,items:[{k:"chabad",n:"בית חב״ד פוקט",q:"Chabad Phuket Patong",addr:"9/6 Rat-u-thit 200 Pee Rd, Patong"}]},
+  {city:"קו סמוי",en:"Chaweng, Koh Samui",lat:9.5320,lon:100.0610,items:[
+   {k:"chabad",n:"בית חב״ד קו סמוי",q:"Chabad Koh Samui",addr:"39/8 Moo 3, Bophut (Chaweng)",note:"מניין יומי ומקווה"},
+   {k:"rest",n:"מסעדה בשרית של חב״ד",type:"meat",q:"Chabad Koh Samui meat restaurant"},
+   {k:"rest",n:"מסעדה חלבית של חב״ד",type:"dairy",q:"Chabad Koh Samui dairy"}]},
+  {city:"קו פנגן",en:"Koh Phangan",lat:9.7380,lon:100.0136,items:[{k:"chabad",n:"בית חב״ד קו פנגן",q:"Chabad Koh Phangan"}]}]},
+ ge:{tip:"בטביליסי ובבטומי יש כשרות מלאה. אפשר לישון ליד בית חב״ד ולהזמין אוכל לשבת.",cities:[
+  {city:"טביליסי",en:"Tbilisi",lat:41.6938,lon:44.8015,items:[
+   {k:"chabad",n:"בית חב״ד טביליסי",q:"Chabad Tbilisi"},
+   {k:"rest",n:"Mendi's",type:"meat",note:"מהדרין, של חב״ד. כל יום 12:00–24:00"},
+   {k:"rest",n:"מטבח חלבי בבית חב״ד",type:"dairy",q:"Chabad Tbilisi dairy kitchen",note:"ארוחות בוקר"}]},
+  {city:"בטומי",en:"Batumi",lat:41.6168,lon:41.6367,items:[
+   {k:"chabad",n:"בית חב״ד בטומי",q:"Chabad Batumi"},
+   {k:"rest",n:"מסעדה בשרית של חב״ד",type:"meat",q:"Chabad Batumi kosher restaurant"},
+   {k:"rest",n:"מלון King Solomon",type:"meat",q:"King Solomon hotel Batumi",note:"מלון כשר עם מסעדה בשרית ומסעדה חלבית"}]}]}
+};
+const KTYPE={meat:"בשרי",dairy:"חלבי",veg:"צמחוני",shop:"מכולת"};
+
 /* ================= HELPERS ================= */
 const $ = (s,el=document)=>el.querySelector(s);
 const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
@@ -1100,7 +1306,9 @@ function renderProfile(){
       <div class="fact"><div class="fact-lbl">${ic("receipt")}טיפים במסעדות</div><div class="fact-sub" style="color:var(--ink)">${esc(c.tipping)}</div></div>
     </div>
     <p class="disclaimer">${ic("info")}<span>המידע נאסף בקפידה, אבל דרישות כניסה ושעות פתיחה משתנים. לפני הטיסה בדקו באתר משרד החוץ ובאתרים הרשמיים של המדינה.</span></p>
+    ${renderKosher("p")}
   </div>`;
+  initMap("p");
 }
 
 let clockTimer=setInterval(()=>{
@@ -1113,6 +1321,63 @@ document.addEventListener("click",async e=>{
   const v=b.dataset.copy, out=$("#copied");
   try{ await navigator.clipboard.writeText(v); out.textContent=`${v} הועתק`; }
   catch(err){ const r=document.createRange(); r.selectNodeContents(b); const s=getSelection(); s.removeAllRanges(); s.addRange(r); out.textContent=`המספר ${v} מסומן. העתיקו עם Ctrl+C`; }
+});
+
+
+/* ================= KOSHER MAP & LIST ================= */
+const maps={}, mkrs={};
+const HEB=/[֐-׿]/;
+function kQuery(it,ct){ return it.q || (it.n + (it.addr&&!HEB.test(it.addr)?", "+it.addr:"") + ", " + ct.en); }
+function kLink(it,ct){ return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(kQuery(it,ct)); }
+function kItem(it,ct){
+  const ch=it.k==="chabad";
+  return `<li><span class="k-ic ${ch?"ch":""}">${ic(ch?"home":(it.type==="shop"?"shop":"food"))}</span>
+    <div style="min-width:0"><div class="k-name">${esc(it.n)}${!ch&&it.type?`<span class="k-type t-${it.type}">${KTYPE[it.type]}</span>`:""}${ch?'<span class="k-type t-shop">בית חב״ד</span>':""}</div>
+    ${it.addr?`<div class="k-addr">${esc(it.addr)}</div>`:""}${it.note?`<div class="k-note">${esc(it.note)}</div>`:""}</div>
+    <a class="lnk" href="${kLink(it,ct)}" target="_blank" rel="noopener" aria-label="ניווט אל ${esc(it.n)}">${ic("pin")}ניווט</a></li>`;
+}
+function renderKosher(pfx){
+  const c=state.country, K=KOSHER[c.id]; if(!K) return "";
+  const nCh=K.cities.reduce((a,ct)=>a+ct.items.filter(x=>x.k==="chabad").length,0);
+  const nR=K.cities.reduce((a,ct)=>a+ct.items.filter(x=>x.k==="rest").length,0);
+  return `<section class="kosher" aria-labelledby="${pfx}-ktitle">
+    <div class="k-head"><div style="min-width:0"><span class="eyebrow">כשרות ובתי חב״ד</span><h3 class="k-title" id="${pfx}-ktitle">כשר ב${esc(c.he)}</h3><p class="k-tip">${esc(K.tip)}</p></div>
+      <div class="k-legend"><span><i class="k-dot ch"></i>${nCh} בתי חב״ד</span><span><i class="k-dot"></i>${nR} מסעדות וחנויות</span></div></div>
+    <div class="k-grid">
+      <div class="k-map" id="${pfx}-map" dir="ltr" role="region" aria-label="מפת בתי חב״ד ומסעדות כשרות"></div>
+      <div class="k-list">${K.cities.map((ct,i)=>`<div class="k-city"><button type="button" class="k-city-h" data-kp="${pfx}" data-kc="${i}">${ic("pin")}<span>${esc(ct.city)}</span><span class="k-count">${ct.items.length} מקומות · למפה</span></button><ul class="k-items">${ct.items.map(it=>kItem(it,ct)).join("")}</ul></div>`).join("")}</div>
+    </div>
+    <p class="disclaimer">${ic("info")}<span>נבדק באוקטובר 2026. מסעדות נפתחות ונסגרות, ותעודות כשרות מתחלפות. לפני ההגעה בדקו את התעודה והשעות, ולשבת הירשמו מראש בבית חב״ד. הנקודה במפה מסמנת את השכונה או העיר. לכתובת המדויקת לוחצים "ניווט".</span></p>
+  </section>`;
+}
+function whenLeaflet(cb){ if(window.__lf) return cb(); const s=$("#leafletJs"); if(!s) return cb(); s.addEventListener("load",cb,{once:true}); s.addEventListener("error",cb,{once:true}); }
+function initMap(pfx){
+  const el=$("#"+pfx+"-map"); if(!el||!state.country) return;
+  const c=state.country, K=KOSHER[c.id]; if(!K) return;
+  whenLeaflet(()=>{
+    if(!document.body.contains(el)) return;
+    if(!window.L){ el.innerHTML=`<div class="k-map-fallback">${ic("pin")}<span>המפה לא נטענה. כל מקום ברשימה נפתח בגוגל מפות בלחיצה על "ניווט".</span></div>`; return; }
+    if(maps[pfx]){ try{maps[pfx].remove();}catch(e){} }
+    const m=L.map(el,{scrollWheelZoom:false,zoomControl:true}); maps[pfx]=m; mkrs[pfx]=[];
+    const tl=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(m);
+    let errs=0; tl.on("tileerror",()=>{ if(++errs===4) el.insertAdjacentHTML("beforeend",'<div class="k-map-note">רקע המפה חסום בתצוגה הזו, אבל הנקודות והקישורים עובדים.</div>'); });
+    const pts=[];
+    K.cities.forEach((ct,i)=>{
+      const ch=ct.items.some(x=>x.k==="chabad");
+      const icon=L.divIcon({className:"",html:`<div class="k-pin ${ch?"ch":""}">${ct.items.length}</div>`,iconSize:[34,34],iconAnchor:[17,17],popupAnchor:[0,-14]});
+      const pop=`<div class="k-pop" dir="rtl"><h4>${esc(ct.city)}</h4><ul>${ct.items.map(it=>`<li><a href="${kLink(it,ct)}" target="_blank" rel="noopener">${esc(it.n)}</a> · ${it.k==="chabad"?"בית חב״ד":KTYPE[it.type]||""}</li>`).join("")}</ul></div>`;
+      mkrs[pfx][i]=L.marker([ct.lat,ct.lon],{icon,title:ct.city,keyboard:true}).addTo(m).bindPopup(pop,{maxWidth:260});
+      pts.push([ct.lat,ct.lon]);
+    });
+    if(pts.length===1) m.setView(pts[0],12); else m.fitBounds(pts,{padding:[46,46],maxZoom:12});
+  });
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-kc]"); if(!b) return;
+  const pfx=b.dataset.kp,i=+b.dataset.kc,m=maps[pfx],mk=mkrs[pfx]&&mkrs[pfx][i];
+  const mapEl=$("#"+pfx+"-map");
+  if(mapEl&&window.innerWidth<=820) mapEl.scrollIntoView({behavior:reduceMotion.matches?"auto":"smooth",block:"center"});
+  if(m&&mk){ m.setView(mk.getLatLng(),Math.max(m.getZoom(),12),{animate:!reduceMotion.matches}); mk.openPopup(); }
 });
 
 /* ================= QUIZ ================= */
@@ -1178,7 +1443,7 @@ $("#quizForm").addEventListener("submit",e=>{
   const q=QUIZ[state.step];
   if(q.key==="interests" && !state.interests.length){ $("#qError").textContent="בחרו לפחות תחום עניין אחד כדי שנוכל להתאים המלצות."; return; }
   if(state.step<QUIZ.length-1){ state.step++; updateQuiz(); const f=$(`.q-step[data-i="${state.step}"] input`); f&&f.focus({preventScroll:true}); }
-  else { renderResults(); show("Results"); }
+  else { renderResults(); show("Results"); if(currentTab==="kosher") initMap("r"); }
 });
 document.addEventListener("click",e=>{
   const a=e.target.closest("[data-act]"); if(!a) return;
@@ -1269,7 +1534,7 @@ function placeCard(p){
 function renderResults(){
   const c=state.country, ranked=rankPlaces(c), plan=buildPlan(c,ranked), tv=transportVerdict(c);
   const stay=STAY_TYPE[state.type][state.budget];
-  const tabs=[["plan","מסלול","route"],["places","מקומות","pin"],["stay","לינה","bed"],["food","אוכל","food"],["move","התניידות","train"],["tips","טיפים","bulb"]];
+  const tabs=[["plan","מסלול","route"],["places","מקומות","pin"],["stay","לינה","bed"],["food","אוכל","food"],["move","התניידות","train"],["kosher","כשר וחב״ד","home"],["tips","טיפים","bulb"]];
   const nightsTxt=n=>n===1?"לילה":"לילות";
   $("#results").innerHTML=`
     <div class="r-head">
@@ -1312,7 +1577,7 @@ function renderResults(){
     <div class="panel" role="tabpanel" id="panel-food" aria-labelledby="tab-food" ${currentTab==="food"?"":"hidden"}>
       <p class="panel-intro">${state.interests.includes("food")?"בחרתם באוכל, אז הנה מה שאסור לפספס.":"גם אם אוכל הוא לא העיקר בטיול, את אלה כדאי לטעום."}${state.budget==="economy"?" סימנו מה זול במיוחד.":""}</p>
       <div class="food-grid">${c.food.map(f=>`<div class="food"><h4>${esc(f.n)}${f.cheap&&state.budget==="economy"?'<span class="pill-cheap">זול</span>':""}</h4><span class="en">${esc(f.en)}</span><p>${esc(f.d)}</p><span class="where">${ic("pin")}${esc(f.where)}</span></div>`).join("")}</div>
-      <div class="block" style="margin-top:16px"><h3>${ic("food")}שומרים כשרות?</h3><p>${esc(c.kosher)}</p></div>
+      <div class="block" style="margin-top:16px"><h3>${ic("home")}שומרים כשרות?</h3><p>${esc(KOSHER[c.id].tip)}</p><button class="btn btn-ghost" type="button" data-tab-go="kosher" style="margin-top:12px">${ic("pin")}<span>מפת בתי חב״ד ומסעדות כשרות</span></button></div>
     </div>
 
     <div class="panel" role="tabpanel" id="panel-move" aria-labelledby="tab-move" ${currentTab==="move"?"":"hidden"}>
@@ -1322,6 +1587,8 @@ function renderResults(){
         <div class="block"><h3>${ic("train")}בתחבורה ציבורית</h3><p>${esc(c.transport.transit)}</p></div>
       </div>
     </div>
+
+    <div class="panel" role="tabpanel" id="panel-kosher" aria-labelledby="tab-kosher" ${currentTab==="kosher"?"":"hidden"}>${renderKosher("r")}</div>
 
     <div class="panel" role="tabpanel" id="panel-tips" aria-labelledby="tab-tips" ${currentTab==="tips"?"":"hidden"}>
       <div class="cols">
@@ -1335,9 +1602,11 @@ function selectTab(k,focus){
   currentTab=k;
   $$(".tab").forEach(t=>{const on=t.dataset.tab===k;t.setAttribute("aria-selected",on);t.tabIndex=on?0:-1;if(on&&focus)t.focus();});
   $$('[role="tabpanel"]').forEach(p=>p.hidden=p.id!=="panel-"+k);
+  if(k==="kosher") initMap("r");
 }
 $("#results").addEventListener("click",e=>{
   const t=e.target.closest(".tab"); if(t){ selectTab(t.dataset.tab); return; }
+  const g=e.target.closest("[data-tab-go]"); if(g){ selectTab(g.dataset.tabGo,true); $(".tabs-scroll").scrollIntoView({behavior:reduceMotion.matches?"auto":"smooth",block:"start"}); return; }
   const f=e.target.closest("[data-fav]");
   if(f){ const n=f.dataset.fav; state.favs.has(n)?state.favs.delete(n):state.favs.add(n); const on=state.favs.has(n); f.setAttribute("aria-pressed",on); f.setAttribute("aria-label",(on?"הסרה מהרשימה":"שמירה לרשימה")+": "+n); }
 });
