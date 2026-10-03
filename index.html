@@ -44,7 +44,20 @@ button{font:inherit;color:inherit}
 /* ---------- HERO ---------- */
 .hero{position:relative;isolation:isolate;color:#fff;overflow:hidden;min-height:clamp(470px,64vh,620px);display:flex;flex-direction:column;transition:min-height .7s cubic-bezier(.2,.7,.2,1)}
 .hero.compact{min-height:250px}
-.hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-2;background:#0B1424}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-2;background:#0B1424;transition:opacity 1.2s}
+.hero-photos{position:absolute;inset:0;z-index:-3;overflow:hidden;background:#0B1424}
+.hp{position:absolute;inset:-2%;background-size:cover;background-position:center;opacity:0;transition:opacity 1.5s ease;animation:kb 14s ease-out forwards}
+.hp.on{opacity:1}
+@keyframes kb{from{transform:scale(1.1) translate3d(1%,1%,0)}to{transform:scale(1) translate3d(0,0,0)}}
+.hero.has-photos canvas{opacity:.34;mix-blend-mode:soft-light}
+.hero.has-photos::after{background:linear-gradient(180deg,rgba(6,12,22,.6) 0%,rgba(6,12,22,.15) 35%,rgba(6,12,22,.3) 65%,rgba(6,12,22,.82) 100%),radial-gradient(120% 90% at 85% 100%,rgba(6,12,22,.55),transparent 60%)}
+.photo-cap{position:absolute;z-index:3;inset-inline-end:clamp(16px,4vw,32px);bottom:96px;display:inline-flex;align-items:center;gap:7px;max-width:calc(100% - 32px);padding:6px 12px 6px 10px;border-radius:999px;background:rgba(6,12,22,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.photo-cap .ic{width:15px;height:15px;color:var(--sign)}
+.photo-cap .pc-src{font-weight:400;opacity:.7;font-size:11.5px}
+.photo-cap:hover{background:rgba(6,12,22,.65)}
+.hero.compact .photo-cap{bottom:14px}
+@media (max-width:820px){.photo-cap{bottom:88px}.photo-cap .pc-src{display:none}}
+
 .hero::after{content:"";position:absolute;inset:0;z-index:-1;background:
   linear-gradient(180deg,rgba(6,12,22,.62) 0%,rgba(6,12,22,.28) 38%,rgba(6,12,22,.38) 70%,rgba(6,12,22,.78) 100%),
   radial-gradient(120% 90% at 85% 100%,rgba(6,12,22,.5),transparent 60%)}
@@ -416,7 +429,9 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 
 <div class="app" id="app" dir="rtl" lang="he">
   <header class="hero" id="hero">
+    <div class="hero-photos" id="heroPhotos" aria-hidden="true"></div>
     <canvas id="flagCanvas" aria-hidden="true"></canvas>
+    <a class="photo-cap" id="photoCap" target="_blank" rel="noopener" hidden></a>
     <div class="wrap topbar">
       <button class="brand" id="brandBtn" type="button" aria-label="דרכון, חזרה לדף הבית">
         <span class="brand-mark"><svg class="ic"><use href="#i-passport"/></svg></span>
@@ -1170,6 +1185,59 @@ const Flag = (() => {
   return {set};
 })();
 
+
+/* ================= HERO PHOTOS (Wikimedia Commons, free licenses; credit links to each file page) ================= */
+const PHOTOS={
+ it:[["Rom_(IT),_Kolosseum_--_2024_--_0610.jpg","הקולוסיאום, רומא"],["Venice_view,_Grand_Canal,_Venice,_Italy.jpg","התעלה הגדולה, ונציה"],["Drei_Zinnen_Tre_Cime_di_Lavaredo_Dolomites.jpg","טרה צ׳ימה די לוורדו, הדולומיטים"],["Positano_(Italy)_05.jpg","פוזיטנו, חוף אמלפי"]],
+ es:[["Barcelona,_Sagrada_Familia_by_night,_2015.jpg","סגרדה פמיליה, ברצלונה"],["The_whole_Alhambra_Granada_Spain.jpg","האלהמברה, גרנדה"],["Plaza_de_España_(Sevilla)_-_01.jpg","פלאסה דה אספניה, סביליה"]],
+ gr:[["Panoramic_view_of_Oia,_Santorini_island_(Thira),_Greece.jpg","אויה, סנטוריני"],["The_Parthenon_from_the_northeast.,_Acropolis_of_Athens_(13896193092).jpg","הפרתנון, אתונה"],["Greece_meteora_monasteries.JPG","מנזרי מטאורה"]],
+ fr:[["Tour_Eiffel_Wikimedia_Commons.jpg","מגדל אייפל, פריז"],["Mont_St_Michel_at_sunrise.jpg","מון סן מישל"],["Champs_de_lavande_à_Valensole.jpg","שדות הלבנדר, ולנסול"]],
+ pt:[["Lissabon-Strassenbahn-28-Linie_28-Alfama-2011-gje.jpg","טראם 28 באלפמה, ליסבון"],["Puente_de_Don_Luis_I,_Oporto,_Portugal,_2019-06-02,_DD_29-31_HDR.jpg","גשר דום לואיש, פורטו"],["Ponta_da_Piedade_(Lagos)_(Portugal)_(42218057361).jpg","פונטה דה פיידאדה, אלגרבה"]],
+ gb:[["Big_Ben_and_Palace_of_Westminster_London_2016_03.jpg","ביג בן, לונדון"],["Edinburgh_Castle_(4945300869).jpg","טירת אדינבורו"],["Old_Man_of_Storr,_Isle_of_Skye,_Scotland_-_Diliff.jpg","האולד מן אוף סטור, האי סקאי"]],
+ us:[["Statue_of_Liberty_and_a_sightseeing_boat,_Liberty_Island,_New_York.jpg","פסל החירות, ניו יורק"],["Lifeguard_stand,_Miami_Beach.jpg","מיאמי ביץ׳"],["Las_Vegas_Strip_lights_at_night.jpg","הסטריפ, לאס וגאס"],["Grand_Canyon_South_Rim_at_Sunset.jpg","הגרנד קניון"],["GoldenGateBridge-001.jpg","גשר הזהב, סן פרנסיסקו"]],
+ jp:[["Chureito_Pagoda_and_Mount_Fuji.jpg","פגודת צ׳ורייטו והר פוג׳י"],["Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine,_Kyoto,_Japan.jpg","פושימי אינארי, קיוטו"],["Shibuya_Crossing.jpg","צומת שיבויה, טוקיו"]],
+ th:[["Templo_Wat_Arun,_Bangkok,_Tailandia,_2013-08-22,_DD_37.jpg","ואט ארון, בנגקוק"],["Reclining_Buddha_statue_of_Wat_Pho8.jpg","בודהה השוכב, ואט פו"],["Chiangmai_banner.jpg","צ׳יאנג מאי"],["Railay_Beach_at_Sunrise.jpg","ריילאי, קראבי"]],
+ ge:[["Kazbegi,_Gergeti_Trinity_Church_and_Mt_Kazbek_(35959311351).jpg","כנסיית גרגטי והר קזבק"],["Tbilisi._Old_Town_with_the_Narikali_Fortress_in_the_background.jpg","העיר העתיקה, טביליסי"],["Ushguli_Svaneti_Georgia.JPG","אושגולי, סוואנטי"]]
+};
+const Photos=(()=>{
+  const box=$("#heroPhotos"),cap=$("#photoCap"),hero=$("#hero");
+  const src=f=>"https://commons.wikimedia.org/wiki/Special:FilePath/"+encodeURIComponent(f)+"?width=1920";
+  const page=f=>"https://commons.wikimedia.org/wiki/File:"+encodeURIComponent(f);
+  const cache={};
+  let token=0,timer=0;
+  function load(f){ if(cache[f]!==undefined) return Promise.resolve(cache[f]); return new Promise(res=>{const im=new Image();im.decoding="async";im.onload=()=>{cache[f]=im.src;res(im.src);};im.onerror=()=>{cache[f]=null;res(null);};im.src=src(f);}); }
+  function paint(url,it){
+    const el=document.createElement("div"); el.className="hp"; el.style.backgroundImage=`url("${url}")`;
+    box.appendChild(el); requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add("on")));
+    const olds=[...box.children].slice(0,-1); setTimeout(()=>olds.forEach(o=>o.remove()),1700);
+    hero.classList.add("has-photos");
+    cap.href=page(it.f); cap.hidden=false;
+    cap.innerHTML=`${ic("pin")}<span>${esc(it.c)}</span><span class="pc-src">צילום: ויקישיתוף</span>`;
+    cap.setAttribute("aria-label",`${it.c}. צילום מוויקישיתוף, פרטי הצלם והרישיון`);
+    if(it.cid){ Flag.set(it.cid); $("#heroPreview").textContent=`${byId[it.cid].en.toUpperCase()} · ${byId[it.cid].he}`; }
+  }
+  function play(items,onAllFail){
+    const my=++token; clearTimeout(timer); let i=0,fails=0;
+    const step=async()=>{
+      if(my!==token) return;
+      if(fails>=items.length){ if(!box.children.length){hero.classList.remove("has-photos");cap.hidden=true;} onAllFail&&onAllFail(); return; }
+      const it=items[i%items.length]; i++;
+      const url=await load(it.f); if(my!==token) return;
+      if(!url){ fails++; return step(); }
+      fails=0; paint(url,it);
+      if(items.length>1) timer=setTimeout(step,reduceMotion.matches?9000:6500);
+    };
+    step();
+  }
+  function forCountry(c){ play((PHOTOS[c.id]||[]).map(([f,cp])=>({f,c:cp}))); }
+  function idle(onAllFail){
+    const all=[]; C.forEach(c=>(PHOTOS[c.id]||[]).forEach(([f,cp])=>all.push({f,c:cp,cid:c.id})));
+    for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]];}
+    play(all,onAllFail);
+  }
+  return {forCountry,idle};
+})();
+
 /* ================= STATE ================= */
 const state = { country:null, type:"couple", nights:7, pace:"balanced", interests:["culture","food"], budget:"comfort", step:0, favs:new Set() };
 try{ const saved=JSON.parse(store.get("darkon-prefs")||"null"); if(saved){ ["type","nights","pace","budget"].forEach(k=>{if(saved[k]!=null)state[k]=saved[k]}); if(Array.isArray(saved.interests)&&saved.interests.length) state.interests=saved.interests; } }catch(e){}
@@ -1269,7 +1337,7 @@ function choose(c){
   const changed = state.country!==c;
   state.country=c; input.value=c.he; $("#notFound").innerHTML="";
   if(changed){ state.favs=new Set(); }
-  Flag.set(c.id); setAccent(c);
+  Flag.set(c.id); setAccent(c); Photos.forCountry(c);
   $("#stubCode").textContent=c.flight.code; $("#stubFlight").textContent=c.flight.h;
   const pill=$("#destPill"); pill.hidden=false; pill.innerHTML=`<img src="${flagURI(c.id)}" alt="">${esc(c.he)}`;
   renderChips(); renderProfile(); show("Home",false);
@@ -1625,7 +1693,7 @@ renderChips();
 setAccent(null);
 Flag.set(C[0].id);
 $("#heroPreview").textContent=`${C[0].en.toUpperCase()} · ${C[0].he}`;
-startIdle();
+Photos.idle(()=>{ if(!state.country) startIdle(); });
 })();
 </script>
 
