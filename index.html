@@ -361,6 +361,36 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 .k-pop a{color:inherit;font-weight:600}
 @media (max-width:820px){.k-grid{grid-template-columns:1fr}.k-map{height:320px}.k-list{max-height:none}}
 
+
+/* ---------- Country identity below the hero ---------- */
+.app{--acc:color-mix(in oklab,var(--c1) 86%,#000);--acc-ink:#fff;--acc-soft:color-mix(in oklab,var(--c1) 10%,var(--surface));--flag:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .app{--acc:color-mix(in oklab,var(--c1) 45%,#fff);--acc-ink:#0E1A2B;--acc-soft:color-mix(in oklab,var(--c1) 22%,var(--surface))}}
+:root[data-theme="dark"] .app{--acc:color-mix(in oklab,var(--c1) 45%,#fff);--acc-ink:#0E1A2B;--acc-soft:color-mix(in oklab,var(--c1) 22%,var(--surface))}
+.hero-photos,.hero canvas,.hero::after{-webkit-mask-image:linear-gradient(180deg,#000 70%,transparent);mask-image:linear-gradient(180deg,#000 70%,transparent)}
+.app{position:relative;isolation:isolate}
+.app::before{content:"";position:absolute;inset:0 0 auto 0;height:1500px;z-index:-1;pointer-events:none;
+  background:radial-gradient(60% 600px at 95% 260px,color-mix(in oklab,var(--c1) 18%,transparent),transparent 72%),radial-gradient(50% 520px at 4% 480px,color-mix(in oklab,var(--c2) 14%,transparent),transparent 72%)}
+.flag-ribbon{display:block;width:96px;height:7px;border-radius:4px;background:var(--flag) center/100% 100% no-repeat;box-shadow:0 0 0 1px var(--line);margin-bottom:12px;height:12px;width:72px}
+.r-band{position:relative;overflow:hidden;isolation:isolate;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center;padding:clamp(20px,3.5vw,34px);border-radius:var(--r-lg);border:1px solid var(--line);
+  background:linear-gradient(120deg,var(--acc-soft) 0%,var(--surface) 55%,color-mix(in oklab,var(--c2) 9%,var(--surface)) 100%);box-shadow:var(--shadow)}
+.r-band::before{content:"";position:absolute;z-index:-1;inset-block:-30%;inset-inline-end:-6%;width:46%;background:var(--flag) center/cover no-repeat;opacity:.13;transform:rotate(-8deg);
+  -webkit-mask-image:radial-gradient(closest-side,#000 40%,transparent);mask-image:radial-gradient(closest-side,#000 40%,transparent)}
+.r-band .eyebrow{color:var(--acc);font-weight:600}
+.r-band .tag{background:color-mix(in oklab,var(--surface) 80%,transparent);backdrop-filter:blur(6px)}
+.r-actions{display:flex;flex-direction:column;align-items:flex-end;gap:14px}
+.cards-strip{display:flex;gap:0;padding:6px 10px 2px}
+.pc{flex:none;width:118px;background:#fff;padding:6px 6px 8px;border-radius:6px;box-shadow:0 10px 24px -10px rgba(10,20,40,.45),0 0 0 1px rgba(0,0,0,.05);transform:rotate(var(--r,0deg));margin-inline-start:-18px;transition:transform .3s}
+.pc:first-child{margin-inline-start:0}
+.pc:hover{transform:rotate(0) translateY(-6px) scale(1.04);z-index:2}
+.pc img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:3px;background:#dde3ea}
+.pc span{display:block;font-size:10.5px;color:#333;margin-top:5px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tab[aria-selected="true"]{background:var(--acc);color:var(--acc-ink)}
+.leg-n{color:var(--acc)}
+.leg-card::before{background:linear-gradient(135deg,var(--c1),var(--c2))!important}
+.k-head .eyebrow,.profile-head .eyebrow{color:var(--acc);font-weight:600}
+.r-actions{min-width:0;max-width:100%}.cards-strip{max-width:100%;overflow-x:auto;scrollbar-width:none;padding-block:10px 6px}.cards-strip::-webkit-scrollbar{display:none}
+@media (max-width:820px){.r-band{grid-template-columns:minmax(0,1fr)}.r-actions{align-items:flex-start;width:100%}.r-band::before{width:80%}.pc{width:92px}.r-title{font-size:clamp(40px,11vw,56px)}}
+
 @media (max-width:820px){
   .pass{grid-template-columns:1fr;-webkit-mask:none;mask:none}
   .pass-main{grid-template-columns:1fr;gap:14px;padding:20px}
@@ -1244,7 +1274,7 @@ try{ const saved=JSON.parse(store.get("darkon-prefs")||"null"); if(saved){ ["typ
 const savePrefs=()=>store.set("darkon-prefs",JSON.stringify({type:state.type,nights:state.nights,pace:state.pace,interests:state.interests,budget:state.budget}));
 
 function setAccent(c){
-  const app=$("#app"); app.style.setProperty("--c1",c?c.colors[0]:"#1B4D8C"); app.style.setProperty("--c2",c?c.colors[1]:"#C22B2B");
+  const app=$("#app"); app.style.setProperty("--c1",c?c.colors[0]:"#1B4D8C"); app.style.setProperty("--c2",c?c.colors[1]:"#C22B2B"); app.style.setProperty("--flag",c?`url("${flagURI(c.id)}")`:"none");
 }
 
 /* ================= SCREENS ================= */
@@ -1351,7 +1381,7 @@ function renderProfile(){
     <div class="profile-head">
       <div class="flag-tile"><img src="${flagURI(c.id)}" alt="הדגל של ${esc(c.he)}"></div>
       <div style="min-width:0">
-        <span class="eyebrow">כרטיס מדינה</span>
+        <span class="flag-ribbon" aria-hidden="true"></span><span class="eyebrow">כרטיס מדינה</span>
         <h2 class="p-name">${esc(c.he)}</h2>
         <div class="p-en">${esc(c.en)} · בירה: ${esc(c.capital)}</div>
       </div>
@@ -1511,7 +1541,7 @@ $("#quizForm").addEventListener("submit",e=>{
   const q=QUIZ[state.step];
   if(q.key==="interests" && !state.interests.length){ $("#qError").textContent="בחרו לפחות תחום עניין אחד כדי שנוכל להתאים המלצות."; return; }
   if(state.step<QUIZ.length-1){ state.step++; updateQuiz(); const f=$(`.q-step[data-i="${state.step}"] input`); f&&f.focus({preventScroll:true}); }
-  else { renderResults(); show("Results"); if(currentTab==="kosher") initMap("r"); }
+  else { renderResults(); wireStrip(); show("Results"); if(currentTab==="kosher") initMap("r"); }
 });
 document.addEventListener("click",e=>{
   const a=e.target.closest("[data-act]"); if(!a) return;
@@ -1605,15 +1635,18 @@ function renderResults(){
   const tabs=[["plan","מסלול","route"],["places","מקומות","pin"],["stay","לינה","bed"],["food","אוכל","food"],["move","התניידות","train"],["kosher","כשר וחב״ד","home"],["tips","טיפים","bulb"]];
   const nightsTxt=n=>n===1?"לילה":"לילות";
   $("#results").innerHTML=`
-    <div class="r-head">
-      <div style="min-width:0"><span class="eyebrow">המסלול שלכם</span><h2 class="r-title">${state.nights} לילות ב${esc(c.he)}</h2>
+    <div class="r-band">
+      <div style="min-width:0"><span class="flag-ribbon" aria-hidden="true"></span><span class="eyebrow">המסלול שלכם</span><h2 class="r-title">${state.nights} לילות ב${esc(c.he)}</h2>
         <div class="r-tags">
           <span class="tag">${ic({couple:"heart",family:"family",friends:"users",solo:"user"}[state.type])}${TYPE_L[state.type]}</span>
           <span class="tag">${ic({relaxed:"coffee",balanced:"scale",intensive:"bolt"}[state.pace])}${PACE_L[state.pace]}</span>
           <span class="tag">${ic({economy:"wallet",comfort:"star",luxury:"gem"}[state.budget])}${BUDGET_L[state.budget]}</span>
           ${state.interests.map(i=>`<span class="tag">${ic(INT[i].i)}${INT[i].l}</span>`).join("")}
         </div></div>
-      <button class="btn btn-ghost" type="button" data-act="edit">${ic("edit")}<span>שינוי העדפות</span></button>
+      <div class="r-actions">
+        <div class="cards-strip" id="cardsStrip" aria-label="גלויות מ${esc(c.he)}">${(PHOTOS[c.id]||[]).slice(0,4).map(([f,cp],i)=>`<figure class="pc" style="--r:${[-6,4,-3,7][i]}deg;margin-block:0"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(f)}?width=330" alt="${esc(cp)}" loading="lazy"><span>${esc(cp)}</span></figure>`).join("")}</div>
+        <button class="btn btn-ghost" type="button" data-act="edit">${ic("edit")}<span>שינוי העדפות</span></button>
+      </div>
     </div>
     <div class="tabs-scroll"><div class="tabs" role="tablist" aria-label="חלקי ההמלצה">${tabs.map(([k,l,i])=>`<button class="tab" role="tab" id="tab-${k}" aria-controls="panel-${k}" aria-selected="${k===currentTab}" tabindex="${k===currentTab?0:-1}" data-tab="${k}">${ic(i)}${l}</button>`).join("")}</div></div>
 
@@ -1665,6 +1698,10 @@ function renderResults(){
       </div>
       <p class="disclaimer">${ic("info")}<span>לפני הטיסה: ביטוח נסיעות, צילום דרכון בטלפון, ובדיקת דרישות הכניסה העדכניות באתר משרד החוץ.</span></p>
     </div>`;
+}
+function wireStrip(){
+  const st=$("#cardsStrip"); if(!st) return;
+  $$("img",st).forEach(im=>{ const drop=()=>{ im.closest(".pc").remove(); if(!st.children.length) st.remove(); }; if(im.complete&&!im.naturalWidth) drop(); else im.addEventListener("error",drop,{once:true}); });
 }
 function selectTab(k,focus){
   currentTab=k;
