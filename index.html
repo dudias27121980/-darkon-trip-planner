@@ -1,0 +1,1363 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style></head><body>
+<title>דרכון</title>
+<meta name="description" content="מתכנן טיולים: בוחרים מדינה, מקבלים את המידע הרשמי, עונים על שאלון קצר ומקבלים מסלול והמלצות מותאמים.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=Karantina:wght@400;700&display=swap">
+<style>
+/* Layout: full-bleed waving-flag hero, a boarding-pass search card straddling its edge, then one 1160px content column */
+:root{
+  --bg:#EEF1F5; --surface:#FFFFFF; --surface-2:#E6EBF1; --ink:#0E1A2B; --muted:#586577; --line:#D3DAE3;
+  --sign:#FFC72C; --sign-ink:#16130A;
+  --ok:#17784E; --ok-bg:#E2F3EA; --warn:#9A4A12; --warn-bg:#FBEBDD; --danger:#C22B2B;
+  --c1:#1B4D8C; --c2:#C22B2B;
+  --hero-scrim:rgba(6,12,22,.52);
+  --shadow:0 1px 2px rgba(14,26,43,.06),0 18px 40px -18px rgba(14,26,43,.28);
+  --f-display:"Karantina","IBM Plex Sans Hebrew",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans Hebrew","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",monospace;
+  --r-lg:22px; --r-md:16px; --r-sm:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#09101B; --surface:#111A28; --surface-2:#1A2536; --ink:#E8EDF5; --muted:#98A4B7; --line:#26334A;
+  --ok:#57CF97; --ok-bg:#12291F; --warn:#F2A766; --warn-bg:#2E1E10; --danger:#FF7070;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 22px 48px -20px rgba(0,0,0,.8); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#09101B; --surface:#111A28; --surface-2:#1A2536; --ink:#E8EDF5; --muted:#98A4B7; --line:#26334A;
+  --ok:#57CF97; --ok-bg:#12291F; --warn:#F2A766; --warn-bg:#2E1E10; --danger:#FF7070;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 22px 48px -20px rgba(0,0,0,.8); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.app{min-height:100%;display:flex;flex-direction:column}
+.wrap{width:100%;max-width:1160px;margin-inline:auto;padding-inline:clamp(16px,4vw,32px)}
+h1,h2,h3,h4{margin:0;text-wrap:balance;line-height:1.15}
+p{margin:0}
+a{color:inherit}
+button{font:inherit;color:inherit}
+.ic{width:1.25em;height:1.25em;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--sign);outline-offset:2px;border-radius:6px}
+.mono{font-family:var(--f-mono);letter-spacing:.02em}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;isolation:isolate;color:#fff;overflow:hidden;min-height:clamp(470px,64vh,620px);display:flex;flex-direction:column;transition:min-height .7s cubic-bezier(.2,.7,.2,1)}
+.hero.compact{min-height:250px}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-2;background:#0B1424}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:
+  linear-gradient(180deg,rgba(6,12,22,.62) 0%,rgba(6,12,22,.28) 38%,rgba(6,12,22,.38) 70%,rgba(6,12,22,.78) 100%),
+  radial-gradient(120% 90% at 85% 100%,rgba(6,12,22,.5),transparent 60%)}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:0;padding:4px;cursor:pointer;color:#fff}
+.brand-mark{width:38px;height:38px;border-radius:11px;background:var(--sign);color:var(--sign-ink);display:grid;place-items:center}
+.brand-name{font-family:var(--f-display);font-size:38px;font-weight:700;line-height:1;letter-spacing:.01em}
+.brand-tag{font-size:12.5px;opacity:.8;display:block;line-height:1.2}
+.dest-pill{display:inline-flex;align-items:center;gap:8px;padding:7px 14px 7px 10px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-weight:600;font-size:14px;cursor:pointer}
+.dest-pill img{width:24px;height:16px;border-radius:3px;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.35)}
+.hero-body{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding-block:24px 112px;gap:12px}
+.hero.compact .hero-body{padding-block:8px 40px}
+.hero-kicker{font-family:var(--f-mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;opacity:.85;display:flex;align-items:center;gap:10px}
+.hero-kicker::before{content:"";width:28px;height:2px;background:var(--sign)}
+.hero-title{font-family:var(--f-display);font-weight:700;font-size:clamp(64px,11vw,132px);line-height:.86;letter-spacing:.005em;text-shadow:0 4px 30px rgba(0,0,0,.35)}
+.hero.compact .hero-title{font-size:clamp(52px,8vw,84px)}
+.hero-sub{max-width:56ch;font-size:clamp(16px,1.6vw,19px);opacity:.92;text-shadow:0 1px 12px rgba(0,0,0,.4)}
+.hero-preview{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;opacity:.7;min-height:1.4em}
+
+/* ---------- BOARDING PASS ---------- */
+.pass-wrap{position:relative;z-index:5;margin-top:-76px;filter:drop-shadow(0 22px 34px rgba(8,16,30,.22)) drop-shadow(0 2px 3px rgba(8,16,30,.12))}
+.pass{--stub:210px;display:grid;grid-template-columns:1fr var(--stub);background:var(--surface);border-radius:var(--r-lg);
+  -webkit-mask:radial-gradient(circle 14px at var(--stub) 0,#0000 97%,#000) ,radial-gradient(circle 14px at var(--stub) 100%,#0000 97%,#000);
+  -webkit-mask-composite:source-in;mask-composite:intersect}
+.pass-main{padding:22px 26px 22px 22px;display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:18px}
+.pass-field{display:flex;flex-direction:column;gap:2px;min-width:0}
+.pass-lbl{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+.pass-code{font-family:var(--f-mono);font-weight:600;font-size:30px;line-height:1.05;letter-spacing:.04em}
+.pass-city{font-size:13px;color:var(--muted)}
+.pass-route{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.pass-route .dash{width:42px;border-top:2px dotted var(--line)}
+.pass-route .ic{transform:scaleX(-1);width:22px;height:22px;color:var(--ink)}
+.dest-input{width:100%;min-width:0;border:0;border-bottom:2px solid var(--line);background:transparent;color:var(--ink);font:600 24px/1.3 var(--f-body);padding:4px 2px 6px;outline:none;transition:border-color .2s}
+.dest-input:focus{border-bottom-color:var(--ink)}
+.dest-input::placeholder{color:var(--muted);font-weight:400;opacity:.75}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:14px;padding:14px 22px;font-weight:700;font-size:16px;cursor:pointer;text-decoration:none;transition:transform .15s,background-color .2s,box-shadow .2s;white-space:nowrap}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn-sign{background:var(--sign);color:var(--sign-ink);box-shadow:0 1px 0 rgba(0,0,0,.15),inset 0 -2px 0 rgba(0,0,0,.12)}
+.btn-sign:hover{background:#FFD24F}
+.btn-ink{background:var(--ink);color:var(--bg)}
+.btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--muted)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn .ic{width:20px;height:20px}
+.arrow-fwd{transform:scaleX(1)}
+.pass-stub{border-inline-start:2px dashed var(--line);padding:20px 22px;display:flex;flex-direction:column;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--surface),var(--surface-2))}
+.stub-row{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.stub-code{font-family:var(--f-mono);font-weight:600;font-size:30px;letter-spacing:.06em}
+.stub-small{font-family:var(--f-mono);font-size:13px}
+.barcode{height:28px;margin-top:4px;background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px,var(--ink) 8px 11px,transparent 11px 12px);opacity:.75;border-radius:2px}
+.suggest{position:absolute;top:calc(100% + 8px);inset-inline-start:0;width:min(520px,100%);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);box-shadow:var(--shadow);padding:6px;margin:0;list-style:none;z-index:20}
+.suggest li{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;cursor:pointer}
+.suggest li[aria-selected="true"],.suggest li:hover{background:var(--surface-2)}
+.suggest img{width:30px;height:20px;border-radius:3px;object-fit:cover;box-shadow:0 0 0 1px var(--line)}
+.suggest .en{margin-inline-start:auto;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+
+.chips-block{padding-block:26px 8px;display:flex;flex-direction:column;gap:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:9px;padding:8px 14px 8px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;font-weight:500;font-size:15px;transition:border-color .2s,transform .2s}
+.chip:hover{border-color:var(--muted);transform:translateY(-1px)}
+.chip[aria-pressed="true"]{border-color:var(--ink);background:var(--surface-2)}
+.chip img{width:24px;height:16px;border-radius:3px;object-fit:cover;box-shadow:0 0 0 1px var(--line)}
+
+.notice{display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:var(--r-md);background:var(--warn-bg);color:var(--warn);margin-top:20px}
+.notice .ic{width:22px;height:22px;margin-top:2px}
+.notice strong{color:var(--ink)}
+.notice p{color:var(--ink)}
+
+/* ---------- SCREENS ---------- */
+main{flex:1}
+.screen{animation:rise .55s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:.001;transform:translateY(14px)}to{opacity:1;transform:none}}
+.section{padding-block:40px 24px}
+
+/* Profile */
+.profile-head{display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:end;padding-bottom:26px;border-bottom:1px solid var(--line)}
+.flag-tile{width:132px;aspect-ratio:3/2;max-width:100%;border-radius:12px;overflow:hidden;box-shadow:0 0 0 1px var(--line),var(--shadow);transform:rotate(-3deg)}
+.flag-tile img{width:100%;height:100%;object-fit:cover;display:block}
+.p-name{font-family:var(--f-display);font-weight:700;font-size:clamp(62px,8vw,96px);line-height:.85}
+.p-en{font-family:var(--f-mono);font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+.p-summary{max-width:62ch;color:var(--muted);margin-top:10px;font-size:17px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:26px}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:18px 18px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.fact-lbl{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13.5px;font-weight:500}
+.fact-lbl .ic{width:18px;height:18px}
+.fact-val{font-weight:600;font-size:18px;line-height:1.35}
+.fact-sub{color:var(--muted);font-size:14px;line-height:1.5}
+.fact-time .fact-val{font-family:var(--f-mono);font-size:38px;font-weight:600;letter-spacing:.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+.fact-emg{grid-column:span 2;background:var(--surface);position:relative}
+.emg-list{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:4px}
+.emg{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.emg-num{font-family:var(--f-display);font-size:52px;font-weight:700;line-height:.95;color:var(--danger);font-variant-numeric:tabular-nums;background:none;border:0;padding:0;cursor:copy;user-select:all;direction:ltr}
+.emg-num.long{font-family:var(--f-mono);font-size:24px;font-weight:600;line-height:1.3;margin-top:8px}
+.emg-lbl{font-size:13px;color:var(--muted)}
+.copied{font-size:12px;color:var(--ok);min-height:1em}
+.route-code{font-family:var(--f-mono);font-weight:600;font-size:22px;letter-spacing:.05em;direction:ltr;display:inline-block}
+.disclaimer{display:flex;gap:10px;align-items:flex-start;color:var(--muted);font-size:13.5px;margin-top:18px}
+.disclaimer .ic{width:18px;height:18px;margin-top:2px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+/* Quiz */
+.quiz{max-width:780px;margin-inline:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:clamp(20px,4vw,40px)}
+.q-progress{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:26px}
+.q-progress span{height:6px;border-radius:99px;background:var(--surface-2);transition:background-color .3s}
+.q-progress span.on{background:var(--ink)}
+.q-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.q-title{font-family:var(--f-display);font-size:clamp(42px,6vw,60px);font-weight:700;line-height:.95}
+.q-sub{color:var(--muted);margin-top:8px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;margin-top:24px}
+.opt{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:16px;border:1.5px solid var(--line);border-radius:var(--r-md);background:var(--surface);cursor:pointer;transition:border-color .2s,background-color .2s,transform .2s}
+.opt:hover{border-color:var(--muted)}
+.opt input{position:absolute;opacity:0;pointer-events:none;inset:0}
+.opt-ic{width:46px;height:46px;border-radius:13px;background:var(--surface-2);display:grid;place-items:center;transition:background-color .2s,color .2s}
+.opt-ic .ic{width:22px;height:22px}
+.opt-t{font-weight:700;font-size:17px;line-height:1.3}
+.opt-d{font-size:13.5px;color:var(--muted);line-height:1.45}
+.opt-check{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;color:transparent;transition:all .2s}
+.opt-check .ic{width:14px;height:14px;stroke-width:3}
+.opt:has(input:checked){border-color:var(--ink);background:var(--surface-2)}
+.opt:has(input:checked) .opt-ic{background:var(--sign);color:var(--sign-ink)}
+.opt:has(input:checked) .opt-check{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.opt:has(input:focus-visible){outline:3px solid var(--sign);outline-offset:2px}
+.opt.multi .opt-check{border-radius:7px}
+.nights{margin-top:26px;display:flex;flex-direction:column;gap:18px}
+.nights-val{display:flex;align-items:baseline;gap:12px}
+.nights-num{font-family:var(--f-display);font-size:110px;font-weight:700;line-height:.8;font-variant-numeric:tabular-nums}
+.nights-unit{font-size:20px;font-weight:600}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:99px;background:var(--surface-2);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:var(--ink);border:5px solid var(--sign);cursor:grab;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--ink);border:5px solid var(--sign);cursor:grab}
+input[type=range]:focus-visible{outline:3px solid var(--sign);outline-offset:6px}
+.quick{display:flex;flex-wrap:wrap;gap:8px}
+.quick button{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;cursor:pointer;font-family:var(--f-mono);font-size:14px}
+.quick button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.q-error{color:var(--danger);font-weight:600;font-size:14px;min-height:1.4em;margin-top:12px}
+.q-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+
+/* Results */
+.r-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
+.r-title{font-family:var(--f-display);font-size:clamp(52px,7vw,80px);font-weight:700;line-height:.9}
+.r-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:13.5px;font-weight:500}
+.tag .ic{width:15px;height:15px}
+.tabs-scroll{overflow-x:auto;margin-top:26px;margin-inline:-4px;padding:4px;scrollbar-width:none}
+.tabs-scroll::-webkit-scrollbar{display:none}
+.tabs{display:inline-flex;gap:4px;padding:5px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.tab{display:inline-flex;align-items:center;gap:8px;border:0;background:transparent;padding:10px 16px;border-radius:12px;font-weight:600;font-size:15px;cursor:pointer;white-space:nowrap;color:var(--muted);transition:background-color .2s,color .2s}
+.tab .ic{width:18px;height:18px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.panel{padding-top:24px}
+.panel-intro{color:var(--muted);max-width:70ch;margin-bottom:20px}
+
+/* itinerary */
+.legs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.leg{display:grid;grid-template-columns:120px 1fr;gap:22px;position:relative;padding-bottom:22px}
+.leg-when{position:relative;padding-top:14px;text-align:start}
+.leg-n{font-family:var(--f-display);font-size:64px;font-weight:700;line-height:.8}
+.leg-n small{font-family:var(--f-body);font-size:15px;font-weight:600;margin-inline-start:4px}
+.leg-range{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);margin-top:6px;letter-spacing:.04em}
+.leg-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:20px;position:relative;min-width:0}
+.leg-card::before{content:"";position:absolute;inset-inline-start:-23px;top:22px;width:12px;height:12px;border-radius:50%;background:var(--sign);box-shadow:0 0 0 4px var(--bg),0 0 0 5px var(--line)}
+.leg:not(:last-child) .leg-card::after{content:"";position:absolute;inset-inline-start:-18px;top:40px;bottom:-22px;border-inline-start:2px dashed var(--line)}
+.leg-title{font-size:22px;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.leg-stay{display:flex;gap:10px;align-items:flex-start;margin-top:10px;color:var(--muted);font-size:15px}
+.leg-stay .ic{width:18px;height:18px;margin-top:3px;color:var(--ink)}
+.leg-places{display:flex;flex-direction:column;gap:8px;margin-top:14px;padding:0;list-style:none}
+.leg-places li{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:var(--surface-2);min-width:0}
+.leg-places li .nm{font-weight:600;min-width:0}
+.leg-places li .pct{margin-inline-start:auto;font-family:var(--f-mono);font-size:12.5px;color:var(--muted);white-space:nowrap}
+.plan-note{display:flex;gap:10px;align-items:flex-start;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px dashed var(--line);color:var(--muted);font-size:14.5px;margin-bottom:18px}
+.plan-note .ic{width:18px;height:18px;margin-top:2px;color:var(--ink)}
+
+/* place cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.card-vis{position:relative;height:124px;display:flex;align-items:flex-end;justify-content:space-between;padding:14px 16px;color:#fff;overflow:hidden;
+  background:radial-gradient(120% 140% at 100% 0%,color-mix(in oklab,var(--c1) 85%,#000) 0%,transparent 62%),radial-gradient(120% 140% at 0% 100%,color-mix(in oklab,var(--c2) 80%,#000) 0%,transparent 60%),#0F1A2B}
+.card-vis .big{position:absolute;inset-inline-end:-14px;top:-14px;width:120px;height:120px;opacity:.22;stroke-width:1.2}
+.card-vis .rg{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;background:rgba(0,0,0,.35);padding:4px 9px;border-radius:6px;backdrop-filter:blur(4px)}
+.match{font-family:var(--f-display);font-size:40px;font-weight:700;line-height:.8;text-align:end}
+.match small{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;opacity:.8;margin-top:6px}
+.card-body{padding:16px 16px 12px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card-t{font-size:19px;font-weight:700;line-height:1.3}
+.card-en{font-family:var(--f-mono);font-size:12px;color:var(--muted);direction:ltr;text-align:end}
+.card-d{color:var(--muted);font-size:15px;line-height:1.55}
+.why{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.why span{font-size:12.5px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--ok-bg);color:var(--ok)}
+.why span.w{background:var(--warn-bg);color:var(--warn)}
+.card-note{display:flex;gap:8px;font-size:13.5px;color:var(--ink);background:var(--surface-2);padding:9px 11px;border-radius:10px}
+.card-note .ic{width:16px;height:16px;margin-top:3px}
+.card-foot{display:flex;align-items:center;gap:6px;padding:10px 12px;border-top:1px solid var(--line)}
+.lnk{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;color:var(--ink)}
+.lnk:hover{background:var(--surface-2)}
+.lnk .ic{width:17px;height:17px}
+.fav{margin-inline-start:auto;width:40px;height:40px;border-radius:12px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+.fav:hover{background:var(--surface-2)}
+.fav[aria-pressed="true"]{color:#E5484D}
+.fav[aria-pressed="true"] .ic{fill:currentColor}
+
+/* generic blocks */
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:22px;min-width:0}
+.block h3{font-size:20px;margin-bottom:8px;display:flex;gap:10px;align-items:center}
+.block h3 .ic{width:22px;height:22px}
+.block p{color:var(--muted)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.feature{background:var(--ink);color:var(--bg);border-radius:var(--r-lg);padding:clamp(22px,4vw,34px);display:grid;gap:12px;margin-bottom:16px}
+.feature .eyebrow{color:inherit;opacity:.7}
+.feature h3{font-family:var(--f-display);font-size:clamp(40px,5vw,56px);font-weight:700;line-height:.95}
+.feature p{opacity:.85;max-width:70ch}
+.feature ul{margin:0;padding-inline-start:20px;opacity:.9}
+.verdict{display:inline-flex;align-self:start;justify-self:start;align-items:center;gap:8px;background:var(--sign);color:var(--sign-ink);font-weight:700;padding:6px 14px;border-radius:999px;font-size:14px}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.list li{display:flex;gap:12px;align-items:flex-start}
+.list li .ic{width:20px;height:20px;margin-top:3px;color:var(--ok)}
+.row-item{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line)}
+.row-item:last-child{border-bottom:0}
+.row-item h4{font-size:17px}
+.row-item p{font-size:14.5px;margin-top:3px}
+.row-links{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.pill-cheap{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);margin-inline-start:8px;vertical-align:middle}
+.food-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:14px}
+.food{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:18px;display:flex;flex-direction:column;gap:6px}
+.food h4{font-size:18px}
+.food .en{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.food p{color:var(--muted);font-size:14.5px}
+.food .where{font-size:13px;font-weight:600;color:var(--ink);display:flex;gap:6px;align-items:center;margin-top:auto;padding-top:6px}
+.food .where .ic{width:15px;height:15px}
+
+footer{margin-top:48px;border-top:1px solid var(--line);padding-block:26px 34px;color:var(--muted);font-size:13.5px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+
+@media (max-width:820px){
+  .pass{grid-template-columns:1fr;-webkit-mask:none;mask:none}
+  .pass-main{grid-template-columns:1fr;gap:14px;padding:20px}
+  .pass-route{display:none}
+  .pass-from{display:none}
+  .pass-stub{border-inline-start:0;border-top:2px dashed var(--line);flex-direction:row;justify-content:space-between;align-items:center;padding:14px 20px}
+  .barcode{display:none}
+  .profile-head{grid-template-columns:1fr;gap:16px;align-items:start}
+  .flag-tile{width:96px}
+  .fact-emg{grid-column:auto}
+  .leg{grid-template-columns:1fr;gap:8px}
+  .leg-when{padding-top:0;display:flex;align-items:baseline;gap:12px}
+  .leg-card::before,.leg-card::after{display:none}
+  .hero-body{padding-block:16px 100px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-passport" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2.5"/><circle cx="12" cy="10" r="3.2"/><path d="M8.8 10h6.4M12 6.8c-1 1-1.4 2-1.4 3.2s.4 2.2 1.4 3.2M12 6.8c1 1 1.4 2 1.4 3.2s-.4 2.2-1.4 3.2M8.5 17h7"/></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-lang" viewBox="0 0 24 24"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></symbol>
+  <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.1 10.4A6 6 0 1 1 10.3 18M7 6h1v4M16.7 13.9l.7.7-2.8 2.8"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-plug" viewBox="0 0 24 24"><path d="M12 22v-5M9 8V2M15 8V2M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8z"/></symbol>
+  <symbol id="i-car" viewBox="0 0 24 24"><path d="M19 17h2v-4.5c0-.7-.3-1.3-.9-1.7L18 9.5 16.3 5.6A2 2 0 0 0 14.5 4.5h-5a2 2 0 0 0-1.8 1.1L6 9.5l-2.1 1.3c-.6.4-.9 1-.9 1.7V17h2M9 17h6"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M6 9.5h12"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M4 2v20l3-2 3 2 3-2 3 2 3-2V2l-3 2-3-2-3 2-3-2-3 2z"/><path d="M8 9h8M8 13h6"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-family" viewBox="0 0 24 24"><circle cx="6" cy="5" r="2.5"/><circle cx="18" cy="5" r="2.5"/><circle cx="12" cy="11.5" r="2"/><path d="M2.5 21v-5.5a3.5 3.5 0 0 1 7 0V21M14.5 21v-5.5a3.5 3.5 0 0 1 7 0V21M10 21v-3a2 2 0 0 1 4 0v3"/></symbol>
+  <symbol id="i-mountain" viewBox="0 0 24 24"><path d="m8 3 4 8 5-5 5 15H2z"/><path d="m6.5 7.5 1.5 1 1.5-1"/></symbol>
+  <symbol id="i-landmark" viewBox="0 0 24 24"><path d="M3 22h18M6 18v-7M10 18v-7M14 18v-7M18 18v-7M12 2l8 5H4z"/></symbol>
+  <symbol id="i-food" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></symbol>
+  <symbol id="i-waves" viewBox="0 0 24 24"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></symbol>
+  <symbol id="i-road" viewBox="0 0 24 24"><path d="M4 22 9 2M20 22 15 2M12 5v2M12 11v2M12 17v3"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z"/><path d="M19 16v5M16.5 18.5h5"/></symbol>
+  <symbol id="i-bed" viewBox="0 0 24 24"><path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"/></symbol>
+  <symbol id="i-train" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="13" rx="3"/><path d="M4 10h16M12 3v7M8 19l-2 3M16 19l2 3M8 13.5h.01M16 13.5h.01"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></symbol>
+  <symbol id="i-gem" viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 13L2 9z"/><path d="M2 9h20M12 22 8 9l4-6 4 6z"/></symbol>
+  <symbol id="i-coffee" viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4zM6 2v2M10 2v2M14 2v2"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M4 7h16M6.5 7 3.5 14a3 3 0 0 0 6 0zM17.5 7l-3 7a3 3 0 0 0 6 0z"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="14" height="14" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+</svg>
+
+<div class="app" id="app" dir="rtl" lang="he">
+  <header class="hero" id="hero">
+    <canvas id="flagCanvas" aria-hidden="true"></canvas>
+    <div class="wrap topbar">
+      <button class="brand" id="brandBtn" type="button" aria-label="דרכון, חזרה לדף הבית">
+        <span class="brand-mark"><svg class="ic"><use href="#i-passport"/></svg></span>
+        <span><span class="brand-name">דרכון</span><span class="brand-tag">מתכנן טיולים אישי</span></span>
+      </button>
+      <button class="dest-pill" id="destPill" type="button" hidden></button>
+    </div>
+    <div class="wrap hero-body">
+      <div class="hero-kicker" id="heroKicker">TLV · יציאה מתל אביב</div>
+      <h1 class="hero-title" id="heroTitle">לאן טסים הפעם?</h1>
+      <p class="hero-sub" id="heroSub">כתבו מדינה וקבלו מיד את כל המידע שצריך לפני הטיסה. אחר כך שאלון קצר, ובסופו מסלול והמלצות שמותאמים בדיוק לכם.</p>
+      <div class="hero-preview" id="heroPreview" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <section id="screenHome" class="screen">
+      <div class="wrap">
+        <div class="pass-wrap" id="passWrap">
+          <form class="pass" id="searchForm" autocomplete="off" role="search">
+            <div class="pass-main">
+              <div class="pass-field pass-from">
+                <span class="pass-lbl">From · מ-</span>
+                <span class="pass-code">TLV</span>
+                <span class="pass-city">תל אביב</span>
+              </div>
+              <div class="pass-route" aria-hidden="true"><span class="dash"></span><svg class="ic"><use href="#i-plane"/></svg><span class="dash"></span></div>
+              <div class="pass-field">
+                <label class="pass-lbl" for="destInput">To · אל</label>
+                <input class="dest-input" id="destInput" type="text" placeholder="יפן, יוון, איטליה…" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggestList" spellcheck="false">
+              </div>
+              <button class="btn btn-sign" type="submit" id="goBtn">
+                <span>לנתוני המדינה</span><svg class="ic"><use href="#i-arrow"/></svg>
+              </button>
+            </div>
+            <div class="pass-stub" aria-live="polite">
+              <div class="stub-row"><span class="pass-lbl">Gate · יעד</span><span class="stub-small" id="stubFlight">—</span></div>
+              <div class="stub-code" id="stubCode">- - -</div>
+              <div class="barcode" aria-hidden="true"></div>
+            </div>
+          </form>
+          <ul class="suggest" id="suggestList" role="listbox" aria-label="הצעות יעד" hidden></ul>
+        </div>
+
+        <div class="chips-block">
+          <span class="eyebrow">יעדים עם מידע מלא</span>
+          <div class="chips" id="chips"></div>
+        </div>
+        <div id="notFound"></div>
+      </div>
+      <div id="profile"></div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="screenQuiz" class="screen section" hidden>
+      <div class="wrap">
+        <form class="quiz" id="quizForm" novalidate>
+          <div class="q-progress" id="qProgress" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+          <div id="qSteps"></div>
+          <p class="q-error" id="qError" role="alert"></p>
+          <div class="q-nav">
+            <button class="btn btn-ghost" type="button" id="qBack"><svg class="ic"><use href="#i-back"/></svg><span>הקודם</span></button>
+            <button class="btn btn-sign" type="submit" id="qNext"><span id="qNextText">הבא</span><svg class="ic"><use href="#i-arrow"/></svg></button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="screenResults" class="screen section" hidden>
+      <div class="wrap" id="results"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>דרכון · מתכנן טיולים</span>
+      <span>דרישות כניסה, מחירים ושעות פתיחה משתנים. לפני הטיסה בדקו באתרים הרשמיים.</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+(() => {
+"use strict";
+document.documentElement.setAttribute("lang","he");
+document.documentElement.setAttribute("dir","rtl");
+
+/* ================= FLAGS (SVG, drawn to scale) ================= */
+const sv = (w,h,vb,body,extra="") => `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="${vb}" ${extra}>${body}</svg>`;
+function starPath(cx,cy,r){let p="";for(let i=0;i<10;i++){const rr=i%2?r*0.382:r,a=-Math.PI/2+i*Math.PI/5;p+=(i?"L":"M")+(cx+rr*Math.cos(a)).toFixed(1)+","+(cy+rr*Math.sin(a)).toFixed(1);}return p+"Z";}
+function usFlag(){
+  let b='<rect width="7410" height="3900" fill="#FFFFFF"/>';
+  for(let i=0;i<13;i+=2) b+=`<rect y="${i*300}" width="7410" height="300" fill="#B22234"/>`;
+  b+='<rect width="2964" height="2100" fill="#3C3B6E"/>';
+  let d="";
+  for(let j=0;j<9;j++){const y=210*(j+1);if(j%2===0){for(let i=0;i<6;i++)d+=starPath(247*(2*i+1),y,120);}else{for(let i=0;i<5;i++)d+=starPath(247*(2*i+2),y,120);}}
+  return sv(1482,780,"0 0 7410 3900",b+`<path d="${d}" fill="#FFFFFF"/>`);
+}
+function geCross(x,y){return `<path transform="translate(${x} ${y})" d="M-4,-4 L-7,-17 L7,-17 L4,-4 L17,-7 L17,7 L4,4 L7,17 L-7,17 L-4,4 L-17,7 L-17,-7 Z" fill="#FF0000"/>`;}
+const FLAGS = {
+  it: sv(1200,800,"0 0 3 2",'<rect width="3" height="2" fill="#CE2B37"/><rect width="2" height="2" fill="#F4F5F0"/><rect width="1" height="2" fill="#009246"/>'),
+  fr: sv(1200,800,"0 0 3 2",'<rect width="3" height="2" fill="#EF4135"/><rect width="2" height="2" fill="#FFFFFF"/><rect width="1" height="2" fill="#0055A4"/>'),
+  es: sv(1200,800,"0 0 750 500",'<rect width="750" height="500" fill="#AA151B"/><rect y="125" width="750" height="250" fill="#F1BF00"/>'),
+  gr: sv(1200,800,"0 0 27 18",'<rect width="27" height="18" fill="#0D5EAF"/><path d="M0 3h27M0 7h27M0 11h27M0 15h27" stroke="#FFFFFF" stroke-width="2"/><rect width="10" height="10" fill="#0D5EAF"/><path d="M5 0v10M0 5h10" stroke="#FFFFFF" stroke-width="2"/>'),
+  pt: sv(1200,800,"0 0 600 400",'<rect width="600" height="400" fill="#FF0000"/><rect width="240" height="400" fill="#006600"/>'+
+      '<g fill="none" stroke="#FFE000" stroke-width="7"><circle cx="240" cy="200" r="72"/><ellipse cx="240" cy="200" rx="72" ry="24"/><ellipse cx="240" cy="200" rx="72" ry="24" transform="rotate(-28 240 200)"/><path d="M168 200h144M240 128v144"/></g>'+
+      '<path d="M200 150h80v52a40 40 0 0 1-80 0z" fill="#FF0000" stroke="#FFFFFF" stroke-width="2"/><path d="M212 162h56v40a28 28 0 0 1-56 0z" fill="#FFFFFF"/>'+
+      '<g fill="#003399"><rect x="235" y="168" width="10" height="13" rx="3"/><rect x="235" y="186" width="10" height="13" rx="3"/><rect x="235" y="204" width="10" height="13" rx="3"/><rect x="219" y="186" width="10" height="13" rx="3"/><rect x="251" y="186" width="10" height="13" rx="3"/></g>'+
+      '<g fill="#FFE000"><rect x="202" y="152" width="7" height="7"/><rect x="271" y="152" width="7" height="7"/><rect x="202" y="178" width="7" height="7"/><rect x="271" y="178" width="7" height="7"/><rect x="205" y="208" width="7" height="7"/><rect x="268" y="208" width="7" height="7"/><rect x="236.5" y="234" width="7" height="7"/></g>'),
+  gb: sv(1200,600,"0 0 60 30",'<clipPath id="s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#FFFFFF" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#FFFFFF" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g>'),
+  us: usFlag(),
+  jp: sv(1200,800,"0 0 900 600",'<rect width="900" height="600" fill="#FFFFFF"/><circle cx="450" cy="300" r="180" fill="#BC002D"/>'),
+  th: sv(1200,800,"0 0 900 600",'<rect width="900" height="600" fill="#A51931"/><rect y="100" width="900" height="400" fill="#F4F5F8"/><rect y="200" width="900" height="200" fill="#2D2A4A"/>'),
+  ge: sv(1200,800,"0 0 300 200",'<rect width="300" height="200" fill="#FFFFFF"/><rect x="130" width="40" height="200" fill="#FF0000"/><rect y="80" width="300" height="40" fill="#FF0000"/>'+geCross(65,40)+geCross(235,40)+geCross(65,160)+geCross(235,160))
+};
+const flagURI = id => "data:image/svg+xml;charset=utf-8," + encodeURIComponent(FLAGS[id]);
+
+/* ================= DATA ================= */
+const TYPE_L = {couple:"זוג", family:"משפחה עם ילדים", friends:"חברים", solo:"לבד"};
+const PACE_L = {relaxed:"קצב רגוע", balanced:"קצב מאוזן", intensive:"קצב אינטנסיבי"};
+const BUDGET_L = {economy:"תקציב חסכוני", comfort:"תקציב נוח", luxury:"תקציב יוקרתי"};
+const INT = {nature:{l:"טבע ונופים",i:"mountain"}, culture:{l:"היסטוריה ותרבות",i:"landmark"}, food:{l:"אוכל ויין",i:"food"}, beach:{l:"ים וחופים",i:"waves"}, roadtrip:{l:"כבישי נוף",i:"road"}, fun:{l:"אטרקציות ובילוי",i:"sparkle"}};
+
+const SCHENGEN = "דרכון ישראלי: פטור מוויזה לתיירות, עד 90 יום בכל 180 יום. הדרכון צריך להיות בתוקף 3 חודשים לפחות אחרי היציאה. בגבולות פועלת מערכת רישום ביומטרית (EES), ובקרוב יידרש גם אישור ETIAS מקוון.";
+
+const C = [
+{ id:"it", he:"איטליה", en:"Italy", aliases:["italia","רומא","מילאנו","ונציה","פירנצה","טוסקנה","דולומיטים","סיציליה"], colors:["#009246","#CE2B37"],
+  summary:"ערי אמנות, הרים אלפיניים, אגמים וחופים, והמטבח שכולם מנסים לחקות.",
+  capital:"רומא", lang:"איטלקית", thanks:"Grazie · גרציה", currency:"אירו (EUR, €)", tz:"Europe/Rome", tzNote:"",
+  emergency:[["112","מוקד חירום כללי"],["113","משטרה"],["118","אמבולנס"]],
+  entry:SCHENGEN, plugs:"C, F, L · 230V", plugNote:"תקע ישראלי דו-פיני (C) מתאים לרוב השקעים.",
+  drive:"ימין", driveNote:"מומלץ רישיון נהיגה בינלאומי. במרכזי ערים יש אזורי ZTL שהכניסה אליהם אסורה.",
+  flight:{h:"כ-3.5–4 שעות", code:"FCO", city:"רומא"}, season:"אפריל–יוני וספטמבר–אוקטובר. בדולומיטים: יוני–ספטמבר להליכות, דצמבר–מרץ לסקי.",
+  tipping:"לא חובה. בחשבון מופיע לרוב coperto (דמי שולחן). על שירות טוב מעגלים או משאירים 5–10%.",
+  regions:[
+    {n:"ונציה",en:"Venice",stay:"בתוך העיר: קנרג׳ו או סן פולו. מסטרה שביבשה זולה בהרבה ומחוברת ברכבת של 10 דקות."},
+    {n:"הדולומיטים",en:"Ortisei",stay:"ואל גרדנה (אורטיזיי) או קורטינה ד׳אמפצו, קרוב לרכבלים."},
+    {n:"אגם גארדה",en:"Sirmione",stay:"סירמיונה או מלצ׳זינה, על שפת האגם."},
+    {n:"אגם קומו",en:"Varenna",stay:"ורנה או בלאג׳ו, ליד תחנות המעבורת."},
+    {n:"טוסקנה",en:"Florence",stay:"פירנצה לעיר, או אגריטוריזמו בוואל ד׳אורצ׳ה לכפר."},
+    {n:"רומא",en:"Monti, Rome",stay:"מונטי או סביב פיאצה נבונה, משם הולכים לכל מקום ברגל."},
+    {n:"חוף אמלפי",en:"Sorrento",stay:"סורנטו נוחה וזולה יחסית. פוזיטנו יפה ויקרה."}],
+  places:[
+    {n:"הקולוסיאום והפורום הרומי",en:"Colosseum, Rome",r:"רומא",d:"הלב של רומא העתיקה: הזירה, הפורום וגבעת הפלטינו בכרטיס אחד.",t:["culture"],e:2,c:2,kid:1,note:"מזמינים כרטיס לתאריך ושעה מראש באתר הרשמי. כניסה חינם עד גיל 18."},
+    {n:"טרסטוורה",en:"Trastevere, Rome",r:"רומא",d:"רובע של סמטאות מרוצפות, טרטוריות וברים קטנים. הכי חי בערב.",t:["food","culture","fun"],e:1,c:1},
+    {n:"מוזיאוני הוותיקן",en:"Vatican Museums",r:"רומא",d:"הקפלה הסיסטינית ובזיליקת פטרוס הקדוש.",t:["culture"],e:2,c:2,note:"לבזיליקה נכנסים עם כתפיים וברכיים מכוסות."},
+    {n:"פירנצה",en:"Florence Duomo",r:"טוסקנה",d:"הדואומו, גלריית אופיצי וגשר פונטה וקיו, הכל במרחק הליכה.",t:["culture","food"],e:2,c:2},
+    {n:"ואל ד׳אורצ׳ה",en:"Val d'Orcia",r:"טוסקנה",d:"גבעות, ברושים וכרמים בין פיינצה למונטלצ׳ינו. הנוף הטוסקני הקלאסי, עם יקבי ברונלו.",t:["nature","roadtrip","food"],e:1,c:2,car:1},
+    {n:"סצ׳דה",en:"Seceda",r:"הדולומיטים",d:"רכבל מאורטיזיי לרכס בגובה 2,500 מטר, עם אחד הנופים המצולמים באלפים.",t:["nature"],e:2,c:2,note:"הרכבל פועל בעונת הקיץ ובעונת הסקי בלבד."},
+    {n:"אגם בראייס",en:"Lago di Braies",r:"הדולומיטים",d:"אגם ירקרק בין צוקים. מסביבו מסלול מעגלי קל של כשעה.",t:["nature","roadtrip"],e:1,c:1,car:1,kid:1,note:"בקיץ הגישה ברכב בשעות היום דורשת הזמנה מראש."},
+    {n:"ואל די פונס",en:"Val di Funes",r:"הדולומיטים",d:"עמק ירוק עם הכנסייה הקטנה של סנטה מדלנה על רקע פסגות האודלה.",t:["nature","roadtrip"],e:1,c:1,car:1},
+    {n:"גארדלנד",en:"Gardaland",r:"אגם גארדה",d:"פארק השעשועים הגדול באיטליה, על שפת אגם גארדה.",t:["fun"],e:1,c:2,kid:1,w:["family","friends"]},
+    {n:"סירמיונה",en:"Sirmione",r:"אגם גארדה",d:"עיירה על חצי אי עם מבצר מימי הביניים, חורבות רומיות וחופי סלע.",t:["culture","beach"],e:1,c:2,kid:1},
+    {n:"ורנה ובלאג׳ו",en:"Varenna",r:"אגם קומו",d:"עיירות צבעוניות על שפת האגם, וילות וגנים. ביניהן שטים במעבורת.",t:["nature","culture"],e:1,c:3},
+    {n:"חוף אמלפי",en:"Amalfi Coast",r:"חוף אמלפי",d:"פוזיטנו, אמלפי ורוולו בנויות על צוקים מעל הים.",t:["beach","roadtrip","nature"],e:2,c:3,note:"בקיץ הכביש עמוס מאוד. מעבורות בין העיירות נוחות יותר מנהיגה."},
+    {n:"פומפיי",en:"Pompeii",r:"חוף אמלפי",d:"עיר רומית שנקברה באפר הווזוב בשנת 79 לספירה. צריך לפחות חצי יום.",t:["culture"],e:2,c:1,kid:1},
+    {n:"ונציה",en:"Venice",r:"ונציה",d:"תעלות, כיכר סן מרקו וברים קטנים של צ׳יקטי. הכי יפה מוקדם בבוקר.",t:["culture","food"],e:1,c:3,kid:1,note:"בימים מסוימים מבקרים ליום אחד משלמים דמי כניסה לעיר."}],
+  food:[
+    {n:"קאצ׳ו א פפה וקרבונרה",en:"Cacio e pepe",d:"שתי הפסטות הרומיות הקלאסיות. מחפשים טרטוריה פשוטה ולא מסעדה עם תמונות בתפריט.",where:"רומא",cheap:1},
+    {n:"ביסטקה אלה פיורנטינה",en:"Bistecca alla fiorentina",d:"סטייק עבה על העצם, צלוי על גחלים ומוגש נא. נמכר לפי משקל.",where:"פירנצה"},
+    {n:"פיצה נפוליטנית",en:"Pizza napoletana",d:"בצק רך, תנור עצים ודקה וחצי של אפייה. הכי טוב בנאפולי.",where:"נאפולי וחוף אמלפי",cheap:1},
+    {n:"ג׳לטו",en:"Gelato artigianale",d:"ג׳לטו טוב מוגש מכלי מתכת מכוסים. ערימות צבעוניות גבוהות הן לרוב סימן לא טוב.",where:"בכל מקום",cheap:1},
+    {n:"צ׳יקטי ואפריטיבו",en:"Cicchetti",d:"נשנושים קטנים בבקארי, עם כוס יין או ספריץ.",where:"ונציה",cheap:1}],
+  kosher:"ברובע היהודי ברומא יש כמה מסעדות כשרות. בתי חב״ד במילאנו, ונציה, פירנצה ועוד.",
+  lodging:{economy:"הוסטלים, B&B ופנסיונים משפחתיים",comfort:"מלון 3–4 כוכבים או דירה",luxury:"מלונות בוטיק ומלונות היסטוריים",special:"אגריטוריזמו: לינה בחווה פעילה בטוסקנה, לרוב עם ארוחת ערב מתוצרת המקום."},
+  transport:{car:0,carText:"מומלץ לדולומיטים, לטוסקנה הכפרית ולאגמים. לא נכנסים ברכב למרכזי ערים: אזורי ZTL מצולמים והקנס מגיע הביתה אחרי חודשים.",transit:"רכבות מהירות (Frecciarossa, Italo) מחברות את רומא, פירנצה, ונציה ומילאנו. באגמים ובחוף אמלפי שטים במעבורות."},
+  tips:["קפה בעמידה ליד הבר זול יותר מקפה בשולחן.","מס עירוני (tassa di soggiorno) משלמים לרוב במלון, בנפרד מההזמנה.","באתרים פופולריים כדאי להזמין כרטיסים כמה שבועות מראש."]
+},
+{ id:"es", he:"ספרד", en:"Spain", aliases:["españa","espana","ברצלונה","מדריד","אנדלוסיה","סביליה","מיורקה"], colors:["#AA151B","#F1BF00"],
+  summary:"גאודי וטאפאס, ארמונות מוריים באנדלוסיה, חופים ים-תיכוניים וחיי לילה שמתחילים בחצות.",
+  capital:"מדריד", lang:"ספרדית. באזורים מסוימים גם קטלאנית, באסקית וגליסית.", thanks:"Gracias · גרסיאס", currency:"אירו (EUR, €)", tz:"Europe/Madrid", tzNote:"באיים הקנריים שעה פחות.",
+  emergency:[["112","מוקד חירום כללי"],["091","משטרה לאומית"]],
+  entry:SCHENGEN, plugs:"C, F · 230V", plugNote:"תקע ישראלי דו-פיני (C) מתאים.",
+  drive:"ימין", driveNote:"מומלץ רישיון נהיגה בינלאומי. בערים חנייה יקרה וקשה.",
+  flight:{h:"כ-4.5–5 שעות", code:"MAD", city:"מדריד"}, season:"אפריל–יוני וספטמבר–אוקטובר. ביולי–אוגוסט חם מאוד באנדלוסיה ובמדריד.",
+  tipping:"לא חובה. במסעדות מעגלים או משאירים 5–10%.",
+  regions:[
+    {n:"ברצלונה",en:"Eixample, Barcelona",stay:"אישמפלה: מרכזי ושקט יחסית. הרובע הגותי לאווירה."},
+    {n:"צפון ספרד",en:"San Sebastian",stay:"סן סבסטיאן, בעיר העתיקה (Parte Vieja)."},
+    {n:"מדריד",en:"Madrid Centro",stay:"סול וגראן ויה למרכז. לה לטינה לברים של טאפאס."},
+    {n:"אנדלוסיה",en:"Santa Cruz, Seville",stay:"בסביליה ברובע סנטה קרוז. בגרנדה באלבאיסין, מול האלהמברה."},
+    {n:"מיורקה",en:"Palma de Mallorca",stay:"פאלמה לעיר, סויר או פוארטו פויינסה לחופים."}],
+  places:[
+    {n:"סגרדה פמיליה",en:"Sagrada Familia",r:"ברצלונה",d:"הבזיליקה של אנטוני גאודי. בפנים, האור דרך הוויטראז׳ים צובע את כל החלל.",t:["culture"],e:1,c:2,kid:1,note:"קונים כרטיסים מראש באתר הרשמי. בקופות כמעט אין."},
+    {n:"פארק גואל",en:"Park Guell",r:"ברצלונה",d:"פארק פסיפסים של גאודי עם תצפית על כל העיר.",t:["culture","nature"],e:2,c:1,kid:1,note:"לאזור המונומנטלי נכנסים בכרטיס עם שעה."},
+    {n:"הרובע הגותי ושוק לה בוקריה",en:"La Boqueria",r:"ברצלונה",d:"סמטאות מימי הביניים ושוק אוכל ענק ליד הרמבלס.",t:["food","culture"],e:1,c:1},
+    {n:"חוף ברצלונטה",en:"Barceloneta Beach",r:"ברצלונה",d:"חוף עירוני עם מסעדות דגים וברים על הטיילת.",t:["beach","fun"],e:1,c:1,kid:1},
+    {n:"פורט אוונטורה",en:"PortAventura World",r:"ברצלונה",d:"פארק שעשועים ופארק מים, כשעה מברצלונה.",t:["fun"],e:1,c:2,kid:1,w:["family","friends"]},
+    {n:"מוזיאון הפראדו ופארק רטירו",en:"Museo del Prado",r:"מדריד",d:"ולסקס, גויה ובוש, ואחר כך שייט בסירה באגם של רטירו.",t:["culture"],e:1,c:1,kid:1},
+    {n:"טולדו",en:"Toledo",r:"מדריד",d:"עיר מבוצרת על גבעה, עם בתי כנסת עתיקים. כחצי שעה ברכבת ממדריד.",t:["culture"],e:2,c:1},
+    {n:"האלהמברה",en:"Alhambra, Granada",r:"אנדלוסיה",d:"מתחם הארמונות המורי בגרנדה, עם הגנים של חנראליפה.",t:["culture"],e:2,c:2,note:"מזמינים שבועות מראש. בכרטיס שעה קבועה לכניסה לארמונות הנסריים."},
+    {n:"סביליה",en:"Real Alcazar Seville",r:"אנדלוסיה",d:"ארמון האלקסר, הקתדרלה וערבי פלמנקו בטריאנה.",t:["culture","food"],e:1,c:2},
+    {n:"קמיניטו דל ריי",en:"Caminito del Rey",r:"אנדלוסיה",d:"שביל תלוי על דפנות קניון, כ-100 מטר מעל הנהר.",t:["nature"],e:3,c:1,note:"מגיל 8 ומעלה. מזמינים מראש."},
+    {n:"העיירות הלבנות ורונדה",en:"Ronda",r:"אנדלוסיה",d:"עיירות לבנות על פסגות הרים, ורונדה על קצה ערוץ עמוק.",t:["roadtrip","nature","culture"],e:1,c:1,car:1},
+    {n:"סן סבסטיאן",en:"San Sebastian",r:"צפון ספרד",d:"מפרץ לה קונצ׳ה ובירת הפינצ׳וס, עם הכי הרבה כוכבי מישלן לנפש באירופה.",t:["food","beach"],e:1,c:3},
+    {n:"פיקוס דה אאורופה",en:"Picos de Europa",r:"צפון ספרד",d:"פסגות גיר וערוצים עמוקים בצפון הירוק. מסלול קארס הוא הקלאסי.",t:["nature","roadtrip"],e:3,c:1,car:1},
+    {n:"סרה דה טרמונטנה",en:"Serra de Tramuntana",r:"מיורקה",d:"כביש הרים מפותל עם מפרצונים וכפרי אבן כמו דייה ווואלדמוסה.",t:["beach","roadtrip","nature"],e:2,c:2,car:1}],
+  food:[
+    {n:"טאפאס ופינצ׳וס",en:"Tapas",d:"עוברים מבר לבר ומזמינים מנה קטנה בכל אחד. בצפון זה פינצ׳וס על פרוסת לחם.",where:"בכל מקום",cheap:1},
+    {n:"פאייה",en:"Paella valenciana",d:"המקור מוולנסיה, עם עוף וארנב. אוכלים בצהריים ולא בערב.",where:"ולנסיה וחוף הים"},
+    {n:"חמון איבריקו",en:"Jamon iberico",d:"נקניק מיובש מחזירים שאוכלים בלוטים.",where:"מדריד ואנדלוסיה"},
+    {n:"צ׳ורוס עם שוקולד",en:"Churros con chocolate",d:"ארוחת בוקר או קינוח אחרי לילה בחוץ.",where:"מדריד",cheap:1},
+    {n:"גספצ׳ו וסלמורחו",en:"Salmorejo",d:"מרקי עגבניות קרים, מושלמים לחום של הקיץ.",where:"אנדלוסיה",cheap:1}],
+  kosher:"מסעדות כשרות ובתי חב״ד במדריד, בברצלונה, במרבייה ובמיורקה.",
+  lodging:{economy:"הוסטלים ופנסיונים (hostal)",comfort:"מלון 3–4 כוכבים או דירה",luxury:"מלונות 5 כוכבים ובוטיק",special:"פאראדור: מלונות ממשלתיים בטירות, מנזרים וארמונות היסטוריים."},
+  transport:{car:0,carText:"מצוין לאנדלוסיה (העיירות הלבנות), לצפון ולמיורקה. בערים הגדולות לא צריך.",transit:"רכבות AVE מהירות: מדריד–ברצלונה ומדריד–סביליה כ-2.5 שעות כל אחת. מטרו נוח במדריד ובברצלונה."},
+  tips:["ארוחת צהריים 14:00–16:00 וערב מ-21:00. הרבה מסעדות סגורות בין הארוחות.","Menú del día בצהריים: ארוחה מלאה במחיר נמוך.","בברצלונה יש הרבה כייסים באזורים התיירותיים. תיק קדמי ובלי טלפון על השולחן."]
+},
+{ id:"gr", he:"יוון", en:"Greece", aliases:["ellada","hellas","אתונה","כרתים","סנטוריני","רודוס","מיקונוס"], colors:["#0D5EAF","#0D5EAF"],
+  summary:"עתיקות, מאות איים, טברנות ליד הים, ושעתיים טיסה מהבית.",
+  capital:"אתונה", lang:"יוונית", thanks:"Ευχαριστώ · אפחריסטו", currency:"אירו (EUR, €)", tz:"Europe/Athens", tzNote:"",
+  emergency:[["112","מוקד חירום כללי"],["100","משטרה"],["166","אמבולנס"],["1571","משטרת תיירים"]],
+  entry:SCHENGEN, plugs:"C, F · 230V", plugNote:"תקע ישראלי דו-פיני (C) מתאים.",
+  drive:"ימין", driveNote:"מומלץ רישיון נהיגה בינלאומי. באיים הכבישים צרים ומפותלים.",
+  flight:{h:"כשעתיים", code:"ATH", city:"אתונה"}, season:"מאי–יוני וספטמבר–אוקטובר. לאיים ולים: יוני–ספטמבר.",
+  tipping:"מקובל 5–10% במסעדות, במזומן.",
+  regions:[
+    {n:"אתונה",en:"Plaka, Athens",stay:"פלאקה או קוקאקי, למרגלות האקרופוליס."},
+    {n:"פלופונס",en:"Nafplio",stay:"נאפפליו, עיר נמל יפה שנוח לטייל ממנה."},
+    {n:"צפון יוון",en:"Kalambaka",stay:"קלמבקה או קסטראקי, למרגלות סלעי מטאורה."},
+    {n:"סנטוריני",en:"Imerovigli",stay:"פירה נוחה לתחבורה. אויה ואימרוביגלי לנוף על הקלדרה."},
+    {n:"מילוס",en:"Adamas, Milos",stay:"אדמנטס (עיירת הנמל) או פלאקה."},
+    {n:"כרתים",en:"Chania",stay:"חאניה במערב, רתימנו במרכז."}],
+  places:[
+    {n:"האקרופוליס ומוזיאון האקרופוליס",en:"Acropolis Museum",r:"אתונה",d:"הפרתנון מעל העיר, והמוזיאון המודרני שמתחתיו.",t:["culture"],e:2,c:1,kid:1,note:"בקיץ מגיעים בפתיחה, לפני החום והתורים."},
+    {n:"פלאקה ומונסטיראקי",en:"Monastiraki",r:"אתונה",d:"סמטאות, שוק פשפשים וגגות עם נוף לאקרופוליס.",t:["food","fun","culture"],e:1,c:1},
+    {n:"כף סוניון",en:"Cape Sounion",r:"אתונה",d:"מקדש פוסידון על צוק מעל הים. מגיעים לשקיעה.",t:["roadtrip","culture"],e:1,c:1,car:1},
+    {n:"נאפפליו ומיקנה",en:"Nafplio",r:"פלופונס",d:"עיר נמל ונציאנית, והמצודה העתיקה של מיקנה במרחק חצי שעה.",t:["culture","roadtrip"],e:2,c:1,car:1},
+    {n:"מטאורה",en:"Meteora",r:"צפון יוון",d:"מנזרים על עמודי סלע ענקיים. אחד הנופים המרשימים באירופה.",t:["nature","culture","roadtrip"],e:2,c:1},
+    {n:"הליכה מפירה לאויה",en:"Fira to Oia hike",r:"סנטוריני",d:"כ-10 ק״מ על שפת הקלדרה, עם הנוף הכי טוב באי.",t:["nature"],e:3,c:1},
+    {n:"שקיעה באויה",en:"Oia",r:"סנטוריני",d:"הבתים הלבנים והכיפות הכחולות. השקיעה הכי מפורסמת ביוון.",t:["fun","culture"],e:1,c:3,w:["couple","friends","solo"],note:"עמוס מאוד בשקיעה. כדאי לשמור מקום במסעדה עם נוף."},
+    {n:"סרקיניקו",en:"Sarakiniko",r:"מילוס",d:"חוף של סלע געשי לבן שנראה כמו ירח, עם מים טורקיז.",t:["beach","nature"],e:1,c:1},
+    {n:"חוף באלוס",en:"Balos Lagoon",r:"כרתים",d:"לגונה רדודה בצבעי טורקיז בקצה המערבי של כרתים.",t:["beach","nature","roadtrip"],e:2,c:1,car:1,kid:1,note:"הדרך אליו עוברת בכביש עפר. אפשר גם בשייט מקיסמוס."},
+    {n:"ערוץ סמריה",en:"Samaria Gorge",r:"כרתים",d:"ירידה של כ-16 ק״מ דרך אחד הערוצים הארוכים באירופה.",t:["nature"],e:3,c:1,note:"פתוח בערך ממאי עד אוקטובר."},
+    {n:"קנוסוס",en:"Knossos",r:"כרתים",d:"הארמון המינואי ליד הרקליון, אחד האתרים העתיקים באירופה.",t:["culture"],e:1,c:1,kid:1},
+    {n:"העיר העתיקה של חאניה",en:"Chania Old Town",r:"כרתים",d:"נמל ונציאני, מגדלור וטברנות על המים.",t:["food","culture"],e:1,c:1,kid:1}],
+  food:[
+    {n:"סובלאקי וגירוס",en:"Souvlaki",d:"בפיתה, מהיר וזול. האוכל הכי יווני שיש.",where:"בכל מקום",cheap:1},
+    {n:"סלט חוריאטיקי",en:"Horiatiki",d:"סלט כפרי עם עגבניות, מלפפון, זיתים ופרוסת פטה עבה. בלי חסה.",where:"בכל טברנה",cheap:1},
+    {n:"דגים טריים בטברנה",en:"Psarotaverna",d:"בוחרים דג מהקרח ומשלמים לפי משקל. בטברנות על המים.",where:"באיים"},
+    {n:"לוקומדס",en:"Loukoumades",d:"כדורי בצק מטוגנים עם דבש וקינמון.",where:"אתונה",cheap:1},
+    {n:"יין אסירטיקו",en:"Assyrtiko",d:"יין לבן מגפנים שגדלות באדמה געשית.",where:"סנטוריני"}],
+  kosher:"באתונה יש מסעדה כשרה ובית חב״ד. בתי חב״ד גם בכרתים, ברודוס ובסלוניקי.",
+  lodging:{economy:"Rooms to let וסטודיו משפחתיים",comfort:"מלון בוטיק או סטודיו עם נוף",luxury:"מלון בוטיק עם בריכה פרטית מול הים",special:"בסנטוריני: חדר חצוב בסלע עם נוף על הקלדרה."},
+  transport:{car:1,carText:"בכרתים ובפלופונס רכב כמעט הכרחי. באתונה עצמה לא צריך.",transit:"מעבורות בין האיים (Ferryhopper מציג את כל החברות), טיסות פנים לכרתים ולסנטוריני, ומטרו מהשדה למרכז אתונה."},
+  tips:["בקיץ מזמינים מעבורות מראש, הן מתמלאות.","ברוב האיים לא שותים מהברז. קונים מים בבקבוקים.","באתרים עתיקים חם מאוד בצהרי הקיץ. מגיעים בפתיחה."]
+},
+{ id:"fr", he:"צרפת", en:"France", aliases:["פריז","פריס","paris","פרובאנס","ניס","הריביירה"], colors:["#0055A4","#EF4135"],
+  summary:"פריז, טירות, שדות לבנדר, האלפים והריביירה, ומאפייה טובה בכל כפר.",
+  capital:"פריז", lang:"צרפתית", thanks:"Merci · מרסי", currency:"אירו (EUR, €)", tz:"Europe/Paris", tzNote:"",
+  emergency:[["112","מוקד חירום כללי"],["15","אמבולנס (SAMU)"],["17","משטרה"],["18","כבאות"]],
+  entry:SCHENGEN, plugs:"C, E · 230V", plugNote:"תקע ישראלי דו-פיני (C) מתאים.",
+  drive:"ימין", driveNote:"מומלץ רישיון נהיגה בינלאומי. בכבישים המהירים יש אגרות.",
+  flight:{h:"כ-4.5–5 שעות", code:"CDG", city:"פריז"}, season:"מאי–יוני וספטמבר. לבנדר בפרובאנס: סוף יוני עד אמצע יולי. באלפים בחורף: סקי.",
+  tipping:"השירות כלול בחשבון (service compris). משאירים כמה אירו כמחווה.",
+  regions:[
+    {n:"פריז",en:"Le Marais, Paris",stay:"לה מארה או הרובע הלטיני, מרכזיים ומלאי חיים."},
+    {n:"נורמנדי",en:"Bayeux",stay:"באייה או הונפלר."},
+    {n:"עמק הלואר",en:"Amboise",stay:"אמבואז או טור."},
+    {n:"האלפים הצרפתיים",en:"Chamonix",stay:"שאמוני, למרגלות המון בלאן."},
+    {n:"פרובאנס",en:"Aix-en-Provence",stay:"אקס-אן-פרובאנס, או כפר בלובֶּרון."},
+    {n:"הריביירה",en:"Nice",stay:"ניס, בעיר העתיקה או ליד הטיילת."}],
+  places:[
+    {n:"מגדל אייפל",en:"Eiffel Tower",r:"פריז",d:"עולים בערב ונשארים לראות את המגדל מנצנץ בתחילת כל שעה.",t:["culture","fun"],e:1,c:2,kid:1,note:"כדאי להזמין כרטיס מראש באתר הרשמי."},
+    {n:"הלובר",en:"Louvre Museum",r:"פריז",d:"המוזיאון הגדול בעולם. בוחרים מראש שלושה-ארבעה אגפים ולא מנסים לראות הכל.",t:["culture"],e:2,c:2,note:"סגור בימי שלישי. כרטיס עם שעה מראש."},
+    {n:"מונמארטר",en:"Montmartre",r:"פריז",d:"בזיליקת סקרה-קר, ציירים בכיכר הטרטר ונוף על כל פריז.",t:["culture","food"],e:2,c:1},
+    {n:"ורסאי",en:"Palace of Versailles",r:"פריז",d:"ארמון לואי ה-14, אולם המראות והגנים. כ-40 דקות ברכבת מפריז.",t:["culture"],e:2,c:2,kid:1},
+    {n:"דיסנילנד פריז",en:"Disneyland Paris",r:"פריז",d:"שני פארקים, כ-40 דקות ברכבת RER ממרכז העיר.",t:["fun"],e:2,c:3,kid:1,w:["family","friends","couple"]},
+    {n:"מון סן מישל",en:"Mont Saint-Michel",r:"נורמנדי",d:"מנזר על אי סלעי שהגאות מקיפה במים.",t:["culture","nature"],e:2,c:1,kid:1},
+    {n:"טירות הלואר",en:"Chateau de Chambord",r:"עמק הלואר",d:"שמבור ושנונסו, ויקבים בין הטירות.",t:["culture","roadtrip","food"],e:1,c:2,car:1,kid:1},
+    {n:"שאמוני ואגוי דו מידי",en:"Aiguille du Midi",r:"האלפים הצרפתיים",d:"רכבל לגובה 3,842 מטר מול המון בלאן.",t:["nature"],e:2,c:3,kid:1},
+    {n:"שדות הלבנדר בוולנסול",en:"Valensole lavender",r:"פרובאנס",d:"שדות סגולים עד האופק. בשיא הפריחה, סוף יוני עד אמצע יולי.",t:["nature","roadtrip"],e:1,c:1,car:1},
+    {n:"גורד ולובראן",en:"Gordes",r:"פרובאנס",d:"כפרי אבן על גבעות, ושווקים כפריים בכל יום בכפר אחר.",t:["culture","food","roadtrip"],e:1,c:2,car:1},
+    {n:"ערוץ ורדון",en:"Gorges du Verdon",r:"פרובאנס",d:"קניון טורקיז. שוכרים קיאק או סירת פדלים באגם סנט-קרואה.",t:["nature","roadtrip","fun"],e:2,c:1,car:1,kid:1},
+    {n:"ניס ואזה",en:"Eze village",r:"הריביירה",d:"טיילת האנגלים בניס, וכפר על צוק מעל הים במרחק חצי שעה.",t:["beach","culture"],e:1,c:2}],
+  food:[
+    {n:"קרואסון ובגט",en:"Boulangerie",d:"קונים בבולנז׳רי שכתוב עליה artisan. בבוקר, חם.",where:"בכל מקום",cheap:1},
+    {n:"גבינות מהשוק",en:"Fromagerie",d:"קונים בשוק ומבקשים מהמוכר להמליץ. עם בגט ויין זו ארוחה.",where:"בכל שוק",cheap:1},
+    {n:"קרפים וסיידר",en:"Galette and cidre",d:"גאלט מלוח מכוסמת, ואחריו קרפ מתוק.",where:"נורמנדי וברטאן",cheap:1},
+    {n:"ביסטרו",en:"Bistro",d:"תפריט היום (formule) בצהריים: מנה ראשונה ועיקרית במחיר קבוע.",where:"פריז"},
+    {n:"יינות עמק הלואר",en:"Loire wine",d:"סנסר, וובריי ושינון, טעימות ישר במרתפים.",where:"עמק הלואר"}],
+  kosher:"בפריז יש מאות מסעדות כשרות, הרבה במארה וברובע ה-17 וה-19. בתי חב״ד בכל אזור.",
+  lodging:{economy:"הוסטלים ומלונות 2 כוכבים",comfort:"מלון 3–4 כוכבים",luxury:"מלונות פאלאס ובוטיק",special:"Chambre d׳hôtes: B&B בבית כפרי, או לילה בטירה בעמק הלואר."},
+  transport:{car:0,carText:"מעולה לפרובאנס, לנורמנדי ולעמק הלואר. בפריז לא צריך.",transit:"רכבות TGV: פריז–ליון כשעתיים, פריז–מרסיי כ-3 שעות. בפריז המטרו מגיע לכל מקום."},
+  tips:["בכניסה לכל חנות אומרים Bonjour. בצרפת זה מאוד חשוב.","מוזיאונים רבים סגורים יום אחד בשבוע. הלובר בשלישי, אורסיי בשני.","את הכרטיסים ללובר ולמגדל אייפל קונים מראש."]
+},
+{ id:"pt", he:"פורטוגל", en:"Portugal", aliases:["ליסבון","פורטו","אלגרבה","מדיירה","lisbon","porto"], colors:["#006600","#FF0000"],
+  summary:"ערים על גבעות מעל האוקיינוס, צוקי אלגרבה, יין פורט ופסטל דה נאטה חם.",
+  capital:"ליסבון", lang:"פורטוגזית", thanks:"Obrigado/a · אובריגאדו", currency:"אירו (EUR, €)", tz:"Europe/Lisbon", tzNote:"",
+  emergency:[["112","מוקד חירום כללי"]],
+  entry:SCHENGEN, plugs:"C, F · 230V", plugNote:"תקע ישראלי דו-פיני (C) מתאים.",
+  drive:"ימין", driveNote:"כבישי אגרה אלקטרוניים: בקשו מחברת ההשכרה מתקן Via Verde.",
+  flight:{h:"כ-5.5–6 שעות", code:"LIS", city:"ליסבון"}, season:"אפריל–אוקטובר. האלגרבה עמוסה ביולי–אוגוסט.",
+  tipping:"לא חובה. במסעדות 5–10%.",
+  regions:[
+    {n:"פורטו ועמק הדורו",en:"Ribeira, Porto",stay:"ריביירה או ליד בולסה, ברגל לנהר."},
+    {n:"ליסבון",en:"Chiado, Lisbon",stay:"שיאדו או באישה, מרכזיים ושטוחים יחסית."},
+    {n:"אלגרבה",en:"Lagos, Portugal",stay:"לאגוש או קרבוירו."},
+    {n:"מדיירה",en:"Funchal",stay:"פונשל, בירת האי."}],
+  places:[
+    {n:"אלפמה וטראם 28",en:"Alfama, Lisbon",r:"ליסבון",d:"הרובע העתיק, תצפיות, והחשמלית הצהובה. בערב, פאדו בבית קטן.",t:["culture","food"],e:2,c:1},
+    {n:"בלם",en:"Belem, Lisbon",r:"ליסבון",d:"מגדל בלם, מנזר ז׳רונימוש, ופסטל דה נאטה מהמאפייה המקורית.",t:["culture","food"],e:1,c:1,kid:1},
+    {n:"סינטרה",en:"Pena Palace, Sintra",r:"ליסבון",d:"ארמונות צבעוניים ביער הררי, כ-40 דקות ברכבת מליסבון.",t:["culture","nature"],e:2,c:2,kid:1,note:"לארמון פנה קונים כרטיס עם שעה מראש."},
+    {n:"קשקאיש",en:"Cascais",r:"ליסבון",d:"עיירת חוף ליד ליסבון, עם חופים ומסעדות דגים.",t:["beach"],e:1,c:2,kid:1},
+    {n:"אוקיינריום ליסבון",en:"Lisbon Oceanarium",r:"ליסבון",d:"אחד האקווריומים הגדולים באירופה.",t:["fun"],e:1,c:2,kid:1,w:["family","couple","friends"]},
+    {n:"ריביירה ופונטה דום לואיש",en:"Ponte Dom Luis I",r:"פורטו ועמק הדורו",d:"הולכים על הגשר מעל הדורו ויורדים למרתפי הפורט בווילה נובה דה גאיה.",t:["culture","food"],e:2,c:1},
+    {n:"עמק הדורו",en:"Douro Valley",r:"פורטו ועמק הדורו",d:"טרסות כרמים לאורך הנהר. טעימות ביקבים (quintas).",t:["food","roadtrip","nature"],e:1,c:2,car:1},
+    {n:"מערת בנאגיל",en:"Benagil Cave",r:"אלגרבה",d:"מערת ים עם פתח בתקרה. רואים אותה מהמים, בשייט או בקיאק.",t:["beach","nature"],e:2,c:1,kid:1},
+    {n:"פונטה דה פיידאדה",en:"Ponta da Piedade",r:"אלגרבה",d:"צוקים זהובים וקשתות סלע ליד לאגוש.",t:["beach","nature","roadtrip"],e:1,c:1},
+    {n:"לבדות במדיירה",en:"Levada walks Madeira",r:"מדיירה",d:"שבילים לאורך תעלות השקיה עתיקות ביער גשם הררי.",t:["nature"],e:3,c:1}],
+  food:[
+    {n:"פסטל דה נאטה",en:"Pastel de nata",d:"טארט קרם חם עם קינמון. המקורי בבלם.",where:"ליסבון",cheap:1},
+    {n:"בקליאו",en:"Bacalhau",d:"דג בקלה מיובש, שבפורטוגל מכינים במאות דרכים.",where:"בכל מקום"},
+    {n:"פרנססיניה",en:"Francesinha",d:"כריך ענק עם בשרים, גבינה מותכת ורוטב.",where:"פורטו",cheap:1},
+    {n:"סרדינים צלויים",en:"Sardinhas assadas",d:"על גחלים, בעיקר בקיץ ובחגי יוני של ליסבון.",where:"ליסבון",cheap:1},
+    {n:"יין פורט",en:"Port wine",d:"טעימות במרתפים שעל גדת הנהר בפורטו.",where:"פורטו"}],
+  kosher:"בתי חב״ד בליסבון, בפורטו ובאלגרבה. בליסבון יש גם מסעדה כשרה.",
+  lodging:{economy:"הוסטלים (מהטובים באירופה) ו-guesthouses",comfort:"מלון בוטיק או דירה",luxury:"מלונות יוקרה ובוטיק היסטוריים",special:"פוסדה (Pousada): מלונות במבצרים ומנזרים היסטוריים."},
+  transport:{car:0,carText:"מומלץ לאלגרבה, לעמק הדורו ולמדיירה.",transit:"רכבת ליסבון–פורטו כ-3 שעות. בליסבון מטרו, חשמליות ורכבות לסינטרה ולקשקאיש."},
+  tips:["ליסבון ופורטו תלולות מאוד. נעליים נוחות.","הלחם והזיתים שמוגשים לשולחן (couvert) בתשלום אם אוכלים מהם.","האוקיינוס קר גם בקיץ, בעיקר בחוף המערבי."]
+},
+{ id:"gb", he:"בריטניה", en:"United Kingdom", aliases:["אנגליה","הממלכה המאוחדת","uk","england","britain","great britain","לונדון","london","סקוטלנד","scotland","אדינבורו"], colors:["#012169","#C8102E"],
+  summary:"לונדון, כפרי אבן בקוטסוולדס, האגמים והרי סקוטלנד. ותה של חמש.",
+  capital:"לונדון", lang:"אנגלית", thanks:"Thank you · Cheers", currency:"לירה שטרלינג (GBP, £)", tz:"Europe/London", tzNote:"",
+  emergency:[["999","מוקד חירום (גם 112)"],["111","ייעוץ רפואי לא דחוף (NHS)"]],
+  entry:"דרכון ישראלי: נדרש אישור נסיעה אלקטרוני (ETA), שמגישים מראש באפליקציה הרשמית UK ETA. מאפשר שהייה של עד 6 חודשים לתיירות.",
+  plugs:"G · 230V", plugNote:"צריך מתאם. התקע הבריטי שונה לגמרי.",
+  drive:"שמאל", driveNote:"נוהגים בצד שמאל, ההגה מימין. מומלץ רכב אוטומטי.",
+  flight:{h:"כ-5.5 שעות", code:"LHR", city:"לונדון"}, season:"מאי–ספטמבר. גשום כל השנה, אבל בקיץ הימים ארוכים מאוד.",
+  tipping:"במסעדות 10–12.5%, אבל בדקו אם service charge כבר נוסף לחשבון. בפאבים לא נהוג.",
+  regions:[
+    {n:"לונדון",en:"Covent Garden, London",stay:"קובנט גארדן, סאות׳ בנק או קנזינגטון, קרוב לרכבת התחתית."},
+    {n:"דרום אנגליה",en:"Bath, UK",stay:"באת׳, עיר ג׳ורג׳יאנית יפהפייה."},
+    {n:"קוטסוולדס",en:"Bourton-on-the-Water",stay:"ברטון-און-דה-ווטר או צ׳יפינג קמפדן."},
+    {n:"האגמים",en:"Keswick",stay:"קזיק או אמבלסייד."},
+    {n:"אדינבורו",en:"Edinburgh Old Town",stay:"העיר העתיקה או העיר החדשה."},
+    {n:"ההיילנדס",en:"Portree, Skye",stay:"פורט וויליאם. באי סקאי: פורטרי."}],
+  places:[
+    {n:"המוזיאון הבריטי",en:"British Museum",r:"לונדון",d:"אבן הרוזטה, מומיות מצריות ועוד מיליוני פריטים. הכניסה חופשית.",t:["culture"],e:1,c:1,kid:1},
+    {n:"סיור באולפני הארי פוטר",en:"Warner Bros Studio Tour London",r:"לונדון",d:"התפאורות המקוריות, רחוב דיאגון ורציף 9¾.",t:["fun"],e:1,c:3,kid:1,note:"נמכר מראש. מזמינים כמה שבועות לפני."},
+    {n:"בורו מרקט",en:"Borough Market",r:"לונדון",d:"שוק האוכל הוותיק של לונדון, ליד גשר לונדון.",t:["food"],e:1,c:1},
+    {n:"מצודת לונדון",en:"Tower of London",r:"לונדון",d:"תכשיטי הכתר, השומרים במדים ומאות שנות היסטוריה.",t:["culture"],e:1,c:2,kid:1},
+    {n:"באת׳ וסטונהנג׳",en:"Stonehenge",r:"דרום אנגליה",d:"המרחצאות הרומיים בבאת׳, ומעגל האבנים במרחק שעה נסיעה.",t:["culture","roadtrip"],e:1,c:2,car:1},
+    {n:"הקוטסוולדס",en:"Cotswolds villages",r:"קוטסוולדס",d:"כפרי אבן דבש, פאבים עתיקים ושבילי הליכה בין שדות.",t:["roadtrip","nature","food"],e:1,c:2,car:1},
+    {n:"מחוז האגמים",en:"Lake District",r:"האגמים",d:"אגמים והרים ירוקים. הליכות לכל רמה ושייט באגם וינדרמיר.",t:["nature"],e:2,c:1,kid:1},
+    {n:"העיר העתיקה באדינבורו",en:"Edinburgh Castle",r:"אדינבורו",d:"הטירה, הרויאל מייל וסמטאות מימי הביניים.",t:["culture"],e:2,c:2,kid:1},
+    {n:"ארתור׳ס סיט",en:"Arthur's Seat",r:"אדינבורו",d:"הר געש כבוי בתוך העיר. כשעה של עלייה ונוף על הכל.",t:["nature"],e:2,c:1},
+    {n:"גלנקו",en:"Glencoe",r:"ההיילנדס",d:"עמק דרמטי בהיילנדס, והכביש אליו הוא אחד היפים בבריטניה.",t:["nature","roadtrip"],e:1,c:1,car:1},
+    {n:"האי סקאי",en:"Isle of Skye",r:"ההיילנדס",d:"צוקים, מפלים וה-Old Man of Storr.",t:["nature","roadtrip"],e:2,c:1,car:1}],
+  food:[
+    {n:"פיש אנד צ׳יפס",en:"Fish and chips",d:"הכי טוב בעיירות חוף, עטוף בנייר.",where:"בכל מקום",cheap:1},
+    {n:"ארוחת בוקר אנגלית",en:"Full English breakfast",d:"ביצים, נקניקיות, שעועית, פטריות וטוסט.",where:"בכל מקום",cheap:1},
+    {n:"סאנדיי רוסט",en:"Sunday roast",d:"צלי עם ירקות ויורקשייר פודינג, בפאב ביום ראשון.",where:"פאבים"},
+    {n:"תה של אחר הצהריים",en:"Afternoon tea",d:"קומות של כריכים קטנים, סקונס עם שמנת וריבה.",where:"לונדון"},
+    {n:"קארי בבריק ליין",en:"Brick Lane curry",d:"האוכל ההודי בבריטניה מהטובים מחוץ להודו.",where:"לונדון",cheap:1}],
+  kosher:"גולדרס גרין וסטמפורד היל בלונדון מלאים במסעדות וחנויות כשרות. בתי חב״ד בכל העיר.",
+  lodging:{economy:"הוסטלים ו-Premier Inn / Travelodge",comfort:"מלון 4 כוכבים או B&B",luxury:"מלונות יוקרה קלאסיים",special:"פאב עם חדרים (Inn) או B&B כפרי בקוטסוולדס."},
+  transport:{car:0,carText:"רכב הכרחי בהיילנדס, בקוטסוולדס ובאגמים. בלונדון לא נוהגים: יש אגרת גודש.",transit:"רכבות מלונדון לאדינבורו כ-4.5 שעות, לבאת׳ כ-1.5 שעות. בלונדון משלמים ב-Tube ובאוטובוס בכרטיס אשראי, עם תקרת תשלום יומית."},
+  tips:["מסתכלים ימינה לפני שחוצים כביש.","רוב המוזיאונים הלאומיים בכניסה חופשית.","כרטיסי רכבת זולים בהרבה כשקונים מראש."]
+},
+{ id:"us", he:"ארצות הברית", en:"United States", aliases:["ארה״ב","ארהב","ארה\"ב","אמריקה","usa","us","america","united states of america","ניו יורק","new york","קליפורניה","פלורידה"], colors:["#3C3B6E","#B22234"], big:1,
+  summary:"ניו יורק, פארקים לאומיים ענקיים, כבישים אינסופיים ופארקי שעשועים.",
+  capital:"וושינגטון הבירה", lang:"אנגלית", thanks:"Thank you · ת׳נק יו", currency:"דולר (USD, $)", tz:"America/New_York", tzNote:"לפי ניו יורק. בחוף המערבי 3 שעות פחות.",
+  emergency:[["911","משטרה, אמבולנס וכבאות"]],
+  entry:"ישראל בתוכנית הפטור מוויזה: נדרש אישור ESTA מקוון לפני הטיסה, ושהייה של עד 90 יום. נדרש דרכון ביומטרי.",
+  plugs:"A, B · 120V", plugNote:"צריך מתאם. בדקו שהמטען תומך ב-100–240V (רוב המטענים כן).",
+  drive:"ימין", driveNote:"שוכרים רכב לרוב מגיל 25. נהגים צעירים משלמים תוספת.",
+  flight:{h:"כ-11–12.5 שעות", code:"JFK", city:"ניו יורק"}, season:"ניו יורק: אפריל–יוני וספטמבר–נובמבר. הפארקים במערב: מאי–ספטמבר. פלורידה: נובמבר–אפריל.",
+  tipping:"18–20% במסעדות זו הנורמה. גם לנהגים ולשירות חדרים. המחירים בתפריט לא כוללים מס.",
+  regions:[
+    {n:"ניו יורק",en:"Midtown Manhattan",stay:"מידטאון לנוחות. לואר איסט סייד או ברוקלין לאווירה."},
+    {n:"פלורידה",en:"Orlando",stay:"אורלנדו לפארקים, מיאמי ביץ׳ לחוף."},
+    {n:"הדרום-מערב",en:"Page, Arizona",stay:"ספרינגדייל ליד ציון, פייג׳ ליד אנטילופ, טוסיאן ליד הגרנד קניון."},
+    {n:"לאס וגאס",en:"Las Vegas Strip",stay:"על הסטריפ."},
+    {n:"קליפורניה",en:"Union Square, San Francisco",stay:"בסן פרנסיסקו ליד יוניון סקוור. ליוסמיטי: מריפוסה או אל פורטל."}],
+  places:[
+    {n:"סנטרל פארק",en:"Central Park",r:"ניו יורק",d:"אגמים, גשרים ומדשאות באמצע מנהטן. אפשר לשכור אופניים.",t:["nature","fun"],e:1,c:1,kid:1},
+    {n:"המטרופוליטן",en:"The Met",r:"ניו יורק",d:"אחד המוזיאונים הגדולים בעולם, על שפת סנטרל פארק.",t:["culture"],e:2,c:2},
+    {n:"גשר ברוקלין ודאמבו",en:"Brooklyn Bridge",r:"ניו יורק",d:"חוצים ברגל לברוקלין, עם קו הרקיע של מנהטן מאחור.",t:["culture"],e:2,c:1,kid:1},
+    {n:"פסל החירות ואליס איילנד",en:"Statue of Liberty",r:"ניו יורק",d:"שייט לפסל ולמוזיאון ההגירה.",t:["culture"],e:1,c:2,kid:1},
+    {n:"וולט דיסני וורלד",en:"Walt Disney World",r:"פלורידה",d:"ארבעה פארקים באורלנדו. צריך כמה ימים.",t:["fun"],e:2,c:3,kid:1,w:["family","friends","couple"]},
+    {n:"מיאמי ביץ׳",en:"Miami Beach",r:"פלורידה",d:"חוף, ארט דקו, ואוכל קובני בליטל הוואנה.",t:["beach","food","fun"],e:1,c:2},
+    {n:"האוורגליידס",en:"Everglades",r:"פלורידה",d:"ביצות ענק, תנינים, וסיור בסירת אוויר.",t:["nature"],e:1,c:2,kid:1,car:1},
+    {n:"הגרנד קניון",en:"Grand Canyon South Rim",r:"הדרום-מערב",d:"קניון בעומק 1.6 ק״מ. השפה הדרומית פתוחה כל השנה.",t:["nature","roadtrip"],e:1,c:1,car:1,kid:1},
+    {n:"פארק ציון",en:"Zion National Park",r:"הדרום-מערב",d:"הליכה במים בערוץ The Narrows, או טיפוס ל-Angels Landing.",t:["nature"],e:3,c:1,car:1,note:"ל-Angels Landing נדרש היתר בהגרלה."},
+    {n:"אנטילופ קניון",en:"Antelope Canyon",r:"הדרום-מערב",d:"קניון צר של אבן חול גלית, עם קרני אור מלמעלה.",t:["nature"],e:1,c:2,car:1,note:"נכנסים רק בסיור מודרך של הנאוואחו. מזמינים מראש."},
+    {n:"הסטריפ",en:"Las Vegas Strip",r:"לאס וגאס",d:"מלונות-עולם, מופעים ומזרקות בלאג׳יו.",t:["fun"],e:1,c:3,w:["couple","friends","solo"]},
+    {n:"כביש 1 וביג סור",en:"Big Sur",r:"קליפורניה",d:"כביש החוף מעל צוקים ומפרצים. אחד הכבישים היפים בעולם.",t:["roadtrip","beach","nature"],e:1,c:1,car:1},
+    {n:"יוסמיטי",en:"Yosemite",r:"קליפורניה",d:"מצוקי גרניט ענקיים, מפלים ויער סקוויות.",t:["nature"],e:2,c:1,car:1,kid:1,note:"בעונות העומס נדרשת לפעמים הזמנת כניסה מראש."},
+    {n:"סן פרנסיסקו",en:"Golden Gate Bridge",r:"קליפורניה",d:"גשר הזהב, רכבל העיר ואלקטרז.",t:["culture","food"],e:2,c:2,kid:1}],
+  food:[
+    {n:"בייגל ופיצה ניו-יורקית",en:"New York bagel",d:"בייגל עם קרם צ׳יז בבוקר, ומשולש פיצה ענק בכל שעה.",where:"ניו יורק",cheap:1},
+    {n:"ברביקיו",en:"BBQ brisket",d:"בריסקט וצלעות שמעושנים שעות ארוכות.",where:"בכל מקום"},
+    {n:"המבורגר",en:"Burger",d:"מהדיינר הפשוט עד המסעדה המושקעת.",where:"בכל מקום",cheap:1},
+    {n:"טאקו",en:"Tacos",d:"מדוכנים ומשאיות, זול ומעולה.",where:"קליפורניה",cheap:1},
+    {n:"אוכל קובני",en:"Cuban sandwich",d:"כריך קובני וקפה קובני חזק בליטל הוואנה.",where:"מיאמי",cheap:1}],
+  kosher:"בניו יורק ובמיאמי יש מאות מסעדות כשרות. בתי חב״ד כמעט בכל עיר, כולל לאס וגאס ואורלנדו.",
+  lodging:{economy:"מוטלים ורשתות זולות",comfort:"מלון רשת 3–4 כוכבים",luxury:"מלונות יוקרה",special:"לינה בתוך פארק לאומי (Lodge): מזמינים חודשים מראש."},
+  transport:{car:2,carText:"מחוץ לניו יורק רכב הוא הדרך היחידה באמת. המרחקים עצומים.",transit:"בניו יורק סאבוויי ואוטובוסים, ומשלמים בכרטיס אשראי ללא מגע (OMNY). בין אזורים רחוקים: טיסות פנים."},
+  tips:["המחירים בתפריט ובחנויות לא כוללים מס מכירה.","ביטוח רפואי לנסיעה הוא חובה בפועל. טיפול רפואי יקר מאוד.","ביבשת יש 4 אזורי זמן. בדקו שעות פתיחה לפי האזור."]
+},
+{ id:"jp", he:"יפן", en:"Japan", aliases:["nippon","nihon","טוקיו","tokyo","קיוטו","kyoto","אוסקה","osaka"], colors:["#BC002D","#BC002D"],
+  summary:"מקדשים ומגדלי זכוכית, רכבות שמגיעות בדיוק, ואוכל שהוא סיבה מספיקה לטוס.",
+  capital:"טוקיו", lang:"יפנית", thanks:"ありがとう · אריגטו", currency:"ין (JPY, ¥)", tz:"Asia/Tokyo", tzNote:"",
+  emergency:[["110","משטרה"],["119","אמבולנס וכבאות"],["050-3816-2787","קו סיוע לתיירים (JNTO), 24 שעות"]],
+  entry:"דרכון ישראלי: פטור מוויזה לתיירות, עד 90 יום. מומלץ למלא מראש את Visit Japan Web כדי לעבור הגירה ומכס מהר יותר.",
+  plugs:"A, B · 100V", plugNote:"צריך מתאם לתקע שטוח. רוב המטענים עובדים ב-100V.",
+  drive:"שמאל", driveNote:"נדרש רישיון נהיגה בינלאומי. בערים אין צורך ברכב.",
+  flight:{h:"כ-12–13 שעות", code:"NRT", city:"טוקיו"}, season:"מרץ–אפריל (פריחת הדובדבן) ואוקטובר–נובמבר (שלכת). ביוני עונת גשמים, ביולי–אוגוסט חם ולח.",
+  tipping:"לא נותנים טיפ. זה עלול אפילו להביך.",
+  regions:[
+    {n:"טוקיו",en:"Shinjuku",stay:"שינג׳וקו או שיבויה לחיים, אסאקוסה לאווירה שקטה וזולה יותר."},
+    {n:"הר פוג׳י",en:"Kawaguchiko",stay:"קוואגוצ׳יקו לנוף על ההר, או ריוקאן עם אונסן בהאקונה."},
+    {n:"קיוטו",en:"Gion, Kyoto",stay:"ליד תחנת קיוטו לנוחות, או גיון לאווירה."},
+    {n:"אוסקה ונארה",en:"Namba, Osaka",stay:"נמבה, ליד דוטונבורי."},
+    {n:"הירושימה",en:"Hiroshima",stay:"ליד תחנת הירושימה או פארק השלום."}],
+  places:[
+    {n:"שיבויה ושינג׳וקו",en:"Shibuya Crossing",r:"טוקיו",d:"צומת שיבויה, סמטאות הבארים של גולדן גאי ותצפית חינם מבניין העירייה.",t:["fun","culture","food"],e:2,c:1},
+    {n:"אסאקוסה וסנסו-ג׳י",en:"Senso-ji",r:"טוקיו",d:"המקדש העתיק בטוקיו, ורחוב דוכנים בדרך אליו.",t:["culture"],e:1,c:1,kid:1},
+    {n:"השוק החיצוני של צוקיג׳י",en:"Tsukiji Outer Market",r:"טוקיו",d:"סושי בבוקר, אומלט מתוק ופירות ים על האש.",t:["food"],e:1,c:1},
+    {n:"teamLab",en:"teamLab Planets Tokyo",r:"טוקיו",d:"מוזיאון אמנות דיגיטלית שנכנסים לתוכו, כולל חדרים עם מים.",t:["fun","culture"],e:1,c:2,kid:1,note:"נמכר מראש. מזמינים באתר הרשמי."},
+    {n:"טוקיו דיסני",en:"Tokyo DisneySea",r:"טוקיו",d:"דיסנילנד ודיסני-סי, שנחשב לאחד הפארקים היפים בעולם.",t:["fun"],e:2,c:3,kid:1,w:["family","friends","couple"]},
+    {n:"קוואגוצ׳יקו והר פוג׳י",en:"Lake Kawaguchiko",r:"הר פוג׳י",d:"אגם עם השתקפות של הר פוג׳י, והפגודה של צ׳וריטו.",t:["nature","roadtrip"],e:1,c:2,kid:1,note:"ההר מוסתר בעננים בימים רבים. הסיכוי הכי טוב מוקדם בבוקר."},
+    {n:"האקונה",en:"Hakone",r:"הר פוג׳י",d:"מעיינות חמים, רכבל מעל אדי גופרית ושייט באגם אשי.",t:["nature","fun"],e:1,c:2,kid:1},
+    {n:"פושימי אינארי",en:"Fushimi Inari",r:"קיוטו",d:"אלפי שערי טוריאי כתומים על צלע ההר. אפשר לעלות עד הפסגה.",t:["culture","nature"],e:2,c:1,note:"מוקדם בבוקר כמעט ריק."},
+    {n:"ארשיאמה",en:"Arashiyama Bamboo Grove",r:"קיוטו",d:"יער הבמבוק, מקדש טנריו-ג׳י וגשר טוגצוקיו.",t:["nature","culture"],e:1,c:1,kid:1},
+    {n:"גיון",en:"Gion Kyoto",r:"קיוטו",d:"רובע בתי התה העתיקים. בערב לפעמים רואים גייקו.",t:["culture","food"],e:1,c:3},
+    {n:"נארה",en:"Nara Park",r:"אוסקה ונארה",d:"איילים שקדים לכם, והבודהה הענק בטודאי-ג׳י.",t:["culture","nature"],e:1,c:1,kid:1},
+    {n:"דוטונבורי",en:"Dotonbori",r:"אוסקה ונארה",d:"שלטי ניאון ואוכל רחוב: טאקויאקי ואוקונומיאקי.",t:["food","fun"],e:1,c:1},
+    {n:"יוניברסל סטודיוס יפן",en:"Universal Studios Japan",r:"אוסקה ונארה",d:"עולם נינטנדו והארי פוטר.",t:["fun"],e:2,c:3,kid:1,w:["family","friends","couple"]},
+    {n:"הירושימה ומיאג׳ימה",en:"Itsukushima Shrine",r:"הירושימה",d:"פארק השלום ומוזיאון הזיכרון, ושער הטוריאי שעומד בתוך הים.",t:["culture","nature"],e:2,c:1}],
+  food:[
+    {n:"ראמן",en:"Ramen",d:"כל אזור והציר שלו. מזמינים במכונה בכניסה.",where:"בכל מקום",cheap:1},
+    {n:"סושי",en:"Sushi",d:"מסושי על מסוע ועד אומקסה ששווה כל ין.",where:"טוקיו"},
+    {n:"אוקונומיאקי וטאקויאקי",en:"Okonomiyaki",d:"פנקייק מלוח על פלנצ׳ה, וכדורי בצק עם תמנון.",where:"אוסקה",cheap:1},
+    {n:"קאיסקי",en:"Kaiseki",d:"ארוחה מסורתית ארוכה של מנות קטנות לפי העונה.",where:"קיוטו"},
+    {n:"קונביני",en:"Konbini",d:"7-Eleven, לוסון ופמילי מארט: אוכל טרי וזול באמת, 24 שעות.",where:"בכל פינה",cheap:1}],
+  kosher:"בטוקיו ובקיוטו יש בתי חב״ד עם ארוחות כשרות. בחוץ קשה מאוד למצוא כשר.",
+  lodging:{economy:"הוסטלים, מלונות קפסולה ומלונות עסקים",comfort:"מלון 3–4 כוכבים (החדרים קטנים)",luxury:"מלונות יוקרה וריוקאן מפואר",special:"ריוקאן: פונדק מסורתי עם אונסן, מזרני טטאמי וארוחת קאיסקי."},
+  transport:{car:-2,carText:"לא צריך בערים. שימושי רק באזורים כפריים או בהוקאידו.",transit:"שינקנסן: טוקיו–קיוטו כ-2:15 שעות. כרטיס Suica/PASMO/ICOCA בטלפון לכל הרכבות. JR Pass התייקר ב-2023, אז בדקו אם הוא משתלם במסלול שלכם."},
+  tips:["רוב המקומות מקבלים אשראי, אבל במקדשים ובכפרים צריך מזומן.","ברכבת מדברים בשקט ולא מדברים בטלפון.","יש מעט פחי אשפה ברחוב. שומרים שקית בתיק."]
+},
+{ id:"th", he:"תאילנד", en:"Thailand", aliases:["בנגקוק","bangkok","פוקט","phuket","קוסמוי","קו סמוי","צ׳יאנג מאי","קופנגן"], colors:["#2D2A4A","#A51931"],
+  summary:"מקדשים מוזהבים, אוכל רחוב, ג׳ונגל בצפון ואיים טורקיז בדרום.",
+  capital:"בנגקוק", lang:"תאית", thanks:"ขอบคุณ · קופ קון (קא/קראפ)", currency:"באט (THB, ฿)", tz:"Asia/Bangkok", tzNote:"",
+  emergency:[["191","משטרה"],["1669","אמבולנס"],["1155","משטרת תיירים (באנגלית)"]],
+  entry:"דרכון ישראלי: פטור מוויזה לתיירות. משך השהייה המותר השתנה בשנים האחרונות, אז בדקו מול שגרירות תאילנד. חובה למלא כרטיס כניסה דיגיטלי (TDAC) עד 3 ימים לפני ההגעה.",
+  plugs:"A, B, C, O · 230V", plugNote:"תקע ישראלי דו-פיני (C) מתאים לרוב השקעים.",
+  drive:"שמאל", driveNote:"נדרש רישיון נהיגה בינלאומי. התנועה בערים כאוטית.",
+  flight:{h:"כ-10.5–11 שעות", code:"BKK", city:"בנגקוק"}, season:"נובמבר–פברואר: יבש ונעים. מאי–אוקטובר: עונת המונסון.",
+  tipping:"לא חובה. מעגלים או משאירים 20–50 באט. במסעדות מסוימות 10% שירות כבר בחשבון.",
+  regions:[
+    {n:"בנגקוק",en:"Sukhumvit, Bangkok",stay:"סוקומוויט ליד ה-BTS. לאורך הנהר לסגנון יוקרתי."},
+    {n:"צ׳יאנג מאי",en:"Nimman, Chiang Mai",stay:"העיר העתיקה או רובע נימן."},
+    {n:"קראבי",en:"Ao Nang",stay:"אאו נאנג. ריילאי לשקט."},
+    {n:"פוקט",en:"Kata Beach",stay:"קאטה או קארון, שקטים יותר מפאטונג."},
+    {n:"קו סמוי",en:"Bophut, Koh Samui",stay:"בופוט או צ׳אוונג."}],
+  places:[
+    {n:"הארמון הגדול ו-ואט פו",en:"Grand Palace Bangkok",r:"בנגקוק",d:"ארמון המלך, מקדש בודהת האזמרגד ובודהה השוכב.",t:["culture"],e:2,c:2,kid:1,note:"קוד לבוש מחמיר: כתפיים וברכיים מכוסות."},
+    {n:"שוק צ׳טוצ׳אק",en:"Chatuchak Market",r:"בנגקוק",d:"אלפי דוכנים, פתוח בסופי שבוע.",t:["food","fun"],e:2,c:1},
+    {n:"אוכל רחוב בצ׳יינה טאון",en:"Yaowarat Road",r:"בנגקוק",d:"רחוב יאוואראט בערב. הכי טוב לאוכל רחוב בעיר.",t:["food"],e:1,c:1},
+    {n:"איוטאיה",en:"Ayutthaya",r:"בנגקוק",d:"חורבות הבירה העתיקה. יום טיול מבנגקוק.",t:["culture"],e:2,c:1,kid:1},
+    {n:"דוי סוטפ",en:"Wat Phra That Doi Suthep",r:"צ׳יאנג מאי",d:"מקדש זהב על הר מעל צ׳יאנג מאי.",t:["culture","nature"],e:2,c:1},
+    {n:"מקלט פילים אתי",en:"Elephant Nature Park",r:"צ׳יאנג מאי",d:"מאכילים ורוחצים פילים שחולצו.",t:["nature"],e:1,c:2,kid:1,note:"בחרו מקום שלא מציע רכיבה על פילים."},
+    {n:"הדרך לפאי",en:"Pai Thailand",r:"צ׳יאנג מאי",d:"762 עיקולים בהרים לעיירה רגועה עם קניון ומעיינות חמים.",t:["roadtrip","nature"],e:3,c:1,car:1,w:["couple","friends","solo"]},
+    {n:"ריילאי",en:"Railay Beach",r:"קראבי",d:"חצי אי שמגיעים אליו רק בסירה, עם צוקי גיר מעל החוף. מקום מעולה לטיפוס.",t:["beach","nature"],e:2,c:1},
+    {n:"סיור ארבעת האיים",en:"Krabi 4 Islands tour",r:"קראבי",d:"סירת זנב-ארוך לחופים, מערות ושנורקל.",t:["beach","fun"],e:1,c:1,kid:1},
+    {n:"איי פי פי",en:"Phi Phi Islands",r:"פוקט",d:"מפרצים טורקיז ומאיה ביי המפורסם.",t:["beach","nature"],e:1,c:2,note:"במאיה ביי אסור לשחות, והוא נסגר כל שנה לתקופה."},
+    {n:"העיר העתיקה של פוקט",en:"Phuket Old Town",r:"פוקט",d:"בתים סינו-פורטוגזיים צבעוניים, בתי קפה ושוק לילה ביום ראשון.",t:["culture","food"],e:1,c:1,kid:1},
+    {n:"הפארק הימי אנג תונג",en:"Ang Thong Marine Park",r:"קו סמוי",d:"42 איים, קיאקים ולגונה ירוקה.",t:["beach","nature"],e:2,c:2}],
+  food:[
+    {n:"פאד תאי",en:"Pad Thai",d:"אטריות מוקפצות מדוכן רחוב, ב-50–80 באט.",where:"בכל מקום",cheap:1},
+    {n:"טום יאם",en:"Tom Yum",d:"מרק חמוץ-חריף עם למון גראס ושרימפס.",where:"בכל מקום",cheap:1},
+    {n:"סום טאם",en:"Som Tam",d:"סלט פפאיה ירוקה. מבקשים mai phet (לא חריף) אם צריך.",where:"בכל מקום",cheap:1},
+    {n:"מנגו סטיקי רייס",en:"Mango sticky rice",d:"אורז דביק בחלב קוקוס עם מנגו בשל.",where:"דוכנים",cheap:1},
+    {n:"קאו סוי",en:"Khao Soi",d:"מרק קארי עם אטריות רכות ופריכות.",where:"צ׳יאנג מאי",cheap:1}],
+  kosher:"בתי חב״ד בבנגקוק (ליד קאו סאן), בצ׳יאנג מאי, בפוקט, בקו סמוי ובקופנגן, עם ארוחות כשרות.",
+  lodging:{economy:"גסטהאוסים והוסטלים",comfort:"ריזורט 4 כוכבים",luxury:"וילה עם בריכה פרטית או ריזורט 5 כוכבים",special:"וילה עם בריכה פרטית, במחיר של מלון רגיל באירופה."},
+  transport:{car:-1,carText:"אפשרי בצפון עם רישיון בינלאומי. נוהגים בצד שמאל. לא שוכרים קטנוע בלי רישיון מתאים: הביטוח לא יכסה.",transit:"טיסות פנים זולות בין בנגקוק, צ׳יאנג מאי, קראבי ופוקט. בעיר Grab או Bolt, בבנגקוק BTS ו-MRT, ובין האיים סירות ומעבורות."},
+  tips:["במקדשים כתפיים וברכיים מכוסות, ומורידים נעליים.","עלבון למשפחת המלוכה הוא עבירה פלילית. לא מדברים על זה.","Grab ו-Bolt מראים מחיר קבוע מראש, בלי ויכוחים."]
+},
+{ id:"ge", he:"גאורגיה", en:"Georgia", aliases:["גרוזיה","sakartvelo","טביליסי","tbilisi","בטומי","batumi"], colors:["#FF0000","#FF0000"],
+  summary:"הרי הקווקז, יין בן 8,000 שנה, חצ׳פורי ואירוח שלא שוכחים. שעתיים וחצי מהבית.",
+  capital:"טביליסי", lang:"גאורגית", thanks:"მადლობა · מדלובה", currency:"לארי (GEL, ₾)", tz:"Asia/Tbilisi", tzNote:"",
+  emergency:[["112","מוקד חירום כללי"]],
+  entry:"דרכון ישראלי: פטור מוויזה לשהייה של עד שנה. מ-2026 גאורגיה דורשת מתיירים ביטוח רפואי לכל תקופת השהייה.",
+  plugs:"C, F · 220V", plugNote:"תקע ישראלי דו-פיני (C) מתאים.",
+  drive:"ימין", driveNote:"כבישי ההרים איטיים. לאושגולי ולתושטי צריך רכב 4x4.",
+  flight:{h:"כ-2.5 שעות", code:"TBS", city:"טביליסי"}, season:"מאי–יוני וספטמבר–אוקטובר. כבישי ההרים הגבוהים פתוחים בעיקר ביוני–ספטמבר.",
+  tipping:"מקובל 10%. לפעמים כבר מופיע בחשבון.",
+  regions:[
+    {n:"טביליסי",en:"Sololaki, Tbilisi",stay:"העיר העתיקה או סולולאקי."},
+    {n:"קחטי",en:"Sighnaghi",stay:"סיגנאגי או תלאווי."},
+    {n:"קזבגי",en:"Stepantsminda",stay:"סטפנצמינדה, מול הר קזבק."},
+    {n:"בורג׳ומי וורדזיה",en:"Borjomi",stay:"בורג׳ומי."},
+    {n:"קוטאיסי",en:"Kutaisi",stay:"מרכז קוטאיסי."},
+    {n:"סוואנטי",en:"Mestia",stay:"מסטיה."},
+    {n:"בטומי",en:"Batumi Old Town",stay:"העיר העתיקה ליד הטיילת."}],
+  places:[
+    {n:"העיר העתיקה של טביליסי",en:"Abanotubani",r:"טביליסי",d:"מרפסות עץ, כנסיות, והמרחצאות הגופריתיים עם הכיפות.",t:["culture","fun"],e:2,c:1,kid:1},
+    {n:"מבצר נאריקלה",en:"Narikala Fortress",r:"טביליסי",d:"עולים ברכבל ומקבלים נוף על כל העיר.",t:["culture"],e:2,c:1,kid:1},
+    {n:"מצחתה",en:"Jvari Monastery",r:"טביליסי",d:"הבירה העתיקה, ומנזר ג׳ווארי מעל מפגש הנהרות. חצי שעה מטביליסי.",t:["culture"],e:1,c:1},
+    {n:"סיגנאגי ויקבי קחטי",en:"Sighnaghi",r:"קחטי",d:"עיר על גבעה מעל עמק אלאזאני, ויקבים שמייצרים יין בכדי חרס (קווברי).",t:["food","roadtrip","culture"],e:1,c:1,car:1},
+    {n:"הכביש הצבאי וכנסיית גרגטי",en:"Gergeti Trinity Church",r:"קזבגי",d:"כנסייה בגובה 2,170 מטר מול הר קזבק, בסוף כביש הרים מרהיב.",t:["roadtrip","nature"],e:2,c:1,car:1},
+    {n:"בורג׳ומי וורדזיה",en:"Vardzia",r:"בורג׳ומי וורדזיה",d:"פארק מים מינרליים ביער, ועיר מערות חצובה בצוק.",t:["nature","culture"],e:2,c:1,car:1,kid:1},
+    {n:"קניון מרטווילי ומערת פרומתאוס",en:"Prometheus Cave",r:"קוטאיסי",d:"שייט בקניון טורקיז, ומערת נטיפים ענקית.",t:["nature","fun"],e:1,c:1,kid:1},
+    {n:"מסטיה ומגדלי סוואנטי",en:"Mestia",r:"סוואנטי",d:"מגדלי אבן מימי הביניים, וקרחונים מעל העיירה.",t:["nature","culture"],e:2,c:1},
+    {n:"אושגולי",en:"Ushguli",r:"סוואנטי",d:"מהכפרים המיושבים הגבוהים באירופה, למרגלות הר שחרה.",t:["nature","roadtrip"],e:3,c:1,car:1,note:"הדרך משובשת. נוסעים ברכב 4x4 או עם נהג מקומי."},
+    {n:"בטומי",en:"Batumi Boulevard",r:"בטומי",d:"טיילת ארוכה על הים השחור, גן בוטני וחיי לילה.",t:["beach","fun"],e:1,c:1,kid:1}],
+  food:[
+    {n:"חצ׳פורי",en:"Khachapuri",d:"לחם גבינה. באג׳רולי (בצורת סירה) מגיע עם ביצה וחמאה.",where:"בכל מקום, ובמיוחד בטומי",cheap:1},
+    {n:"חינקלי",en:"Khinkali",d:"כיסונים עם מרק בפנים. מחזיקים בזנב ושותים קודם את המרק.",where:"בכל מקום",cheap:1},
+    {n:"יין קווברי",en:"Qvevri wine",d:"יין שמתסיסים בכדי חרס בתוך האדמה, שיטה ברשימת המורשת של אונסק״ו.",where:"קחטי"},
+    {n:"מצוואדי",en:"Mtsvadi",d:"שיפודים על גחלי גפנים.",where:"בכל מקום",cheap:1},
+    {n:"צ׳ורצ׳חלה",en:"Churchkhela",d:"אגוזים מושחלים בחוט וטבולים במיץ ענבים מוקרש.",where:"שווקים",cheap:1}],
+  kosher:"בטביליסי יש בית חב״ד ומסעדה כשרה, וגם בבטומי יש בית חב״ד.",
+  lodging:{economy:"גסטהאוסים והוסטלים",comfort:"מלון בוטיק",luxury:"מלונות יוקרה בטביליסי ובקחטי",special:"גסטהאוס משפחתי, לרוב עם ארוחות ביתיות ויין מהמרתף."},
+  transport:{car:1,carText:"רכב או נהג פרטי הם הכי נוחים לקזבגי ולקחטי. לאושגולי צריך 4x4.",transit:"מרשרוטקות (מיניבוסים) זולות בין ערים, רכבת טביליסי–בטומי, ו-Bolt בערים. טיסות למסטיה תלויות במזג האוויר."},
+  tips:["בסופרא (סעודה) יש טוסטים ארוכים, וטמאדה שמנהל את השולחן.","מעבר ג׳ווארי בדרך לקזבגי עלול להיסגר בשלג.","Bolt זמין בטביליסי ובבטומי וזול מאוד."]
+}
+];
+
+/* ================= HELPERS ================= */
+const $ = (s,el=document)=>el.querySelector(s);
+const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ic = (n,cls="") => `<svg class="ic ${cls}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const norm = s => String(s||"").toLowerCase().replace(/[״׳"'`.\-\s]/g,"");
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+C.forEach(c => { c.keys = [c.he,c.en,...c.aliases].map(norm); });
+const byId = Object.fromEntries(C.map(c=>[c.id,c]));
+const store = {get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let p=Array.from({length:n+1},(_,i)=>i);for(let i=1;i<=m;i++){const q=[i];for(let j=1;j<=n;j++)q[j]=Math.min(p[j]+1,q[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=q;}return p[n];}
+function matches(q){
+  const n=norm(q); if(!n) return [];
+  const pre=C.filter(c=>c.keys.some(k=>k.startsWith(n)));
+  const inc=C.filter(c=>!pre.includes(c)&&c.keys.some(k=>k.includes(n)));
+  return [...pre,...inc];
+}
+function exact(q){const n=norm(q);return C.find(c=>c.keys.includes(n));}
+function closest(q){const n=norm(q);return C.map(c=>({c,d:Math.min(...c.keys.map(k=>lev(n,k)))})).sort((a,b)=>a.d-b.d).slice(0,3).map(x=>x.c);}
+
+function tzOffset(tz,d=new Date()){
+  const p=Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:tz,hourCycle:"h23",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"}).formatToParts(d).map(x=>[x.type,x.value]));
+  return Math.round((Date.UTC(+p.year,+p.month-1,+p.day,+p.hour%24,+p.minute,+p.second)-d.getTime())/60000);
+}
+function hoursHe(min){const h=Math.abs(min)/60;if(h===1)return "שעה אחת";if(h===2)return "שעתיים";return (Number.isInteger(h)?h:h.toFixed(1))+" שעות";}
+function timeInfo(c){
+  const now=new Date();
+  const t=new Intl.DateTimeFormat("he-IL",{timeZone:c.tz,hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).format(now);
+  const day=new Intl.DateTimeFormat("he-IL",{timeZone:c.tz,weekday:"long"}).format(now);
+  const diff=tzOffset(c.tz,now)-tzOffset("Asia/Jerusalem",now);
+  const rel = diff===0 ? "אותה שעה כמו בישראל" : diff<0 ? `${hoursHe(diff)} אחורה מישראל` : `${hoursHe(diff)} קדימה מישראל`;
+  return {t,day,rel};
+}
+
+/* ================= WAVING FLAG (canvas) ================= */
+const Flag = (() => {
+  const cv=$("#flagCanvas"), ctx=cv.getContext("2d");
+  let W=0,H=0,cur=null,prev=null,mix=1,t=0,raf=0,onScreen=true;
+  const cache={};
+  function raster(id){
+    if(cache[id]) return Promise.resolve(cache[id]);
+    return new Promise(res=>{
+      const img=new Image();
+      img.onload=()=>{const o=document.createElement("canvas");o.width=1200;o.height=Math.round(1200*img.naturalHeight/img.naturalWidth);o.getContext("2d").drawImage(img,0,0,o.width,o.height);cache[id]=o;res(o);};
+      img.onerror=()=>res(null);
+      img.src=flagURI(id);
+    });
+  }
+  function resize(){
+    const r=cv.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);
+    W=r.width;H=r.height;cv.width=Math.max(1,Math.round(W*dpr));cv.height=Math.max(1,Math.round(H*dpr));
+    ctx.setTransform(dpr,0,0,dpr,0,0); draw();
+  }
+  function paint(src,alpha){
+    if(!src) return;
+    const iw=src.width,ih=src.height,A=Math.min(30,Math.max(10,H*0.05));
+    const s=Math.max((W+60)/iw,(H+A*2+40)/ih),dw=iw*s,dh=ih*s,ox=(W-dw)/2,oy=(H-dh)/2,step=4;
+    ctx.globalAlpha=alpha;
+    for(let x=0;x<W;x+=step){
+      const k=0.5+0.5*(x/W);
+      const p1=x*0.010+t*1.5,p2=x*0.023-t*1.05;
+      const dy=(Math.sin(p1)*A+Math.sin(p2)*A*0.32)*k;
+      const sx=Math.min(iw-1,Math.max(0,(x-ox)/s)),sw=Math.min(iw-sx,step/s+0.5);
+      ctx.drawImage(src,sx,0,sw,ih,x,oy+dy,step+1,dh);
+      const sl=(Math.cos(p1)*0.85+Math.cos(p2)*0.3)*k;
+      ctx.fillStyle=sl>0?`rgba(255,255,255,${(sl*0.11).toFixed(3)})`:`rgba(0,0,0,${(-sl*0.24).toFixed(3)})`;
+      ctx.fillRect(x,0,Math.min(step,W-x),H);
+    }
+    ctx.globalAlpha=1;
+  }
+  function draw(){
+    ctx.fillStyle="#0B1424";ctx.fillRect(0,0,W,H);
+    if(prev&&mix<1) paint(prev,1);
+    paint(cur,prev&&mix<1?mix:1);
+  }
+  function loop(ts){
+    raf=0;
+    if(reduceMotion.matches||document.hidden||!onScreen){draw();return;}
+    t=ts/1000; if(mix<1) mix=Math.min(1,mix+0.03);
+    draw(); raf=requestAnimationFrame(loop);
+  }
+  function kick(){ if(!raf) raf=requestAnimationFrame(loop); }
+  async function set(id){
+    const r=await raster(id); if(!r||r===cur) return;
+    prev=cur; cur=r; mix=prev&&!reduceMotion.matches?0:1; draw(); kick();
+  }
+  new ResizeObserver(resize).observe(cv);
+  new IntersectionObserver(e=>{onScreen=e[0].isIntersecting;if(onScreen)kick();}).observe(cv);
+  document.addEventListener("visibilitychange",kick);
+  reduceMotion.addEventListener?.("change",kick);
+  C.forEach(c=>raster(c.id));
+  return {set};
+})();
+
+/* ================= STATE ================= */
+const state = { country:null, type:"couple", nights:7, pace:"balanced", interests:["culture","food"], budget:"comfort", step:0, favs:new Set() };
+try{ const saved=JSON.parse(store.get("darkon-prefs")||"null"); if(saved){ ["type","nights","pace","budget"].forEach(k=>{if(saved[k]!=null)state[k]=saved[k]}); if(Array.isArray(saved.interests)&&saved.interests.length) state.interests=saved.interests; } }catch(e){}
+const savePrefs=()=>store.set("darkon-prefs",JSON.stringify({type:state.type,nights:state.nights,pace:state.pace,interests:state.interests,budget:state.budget}));
+
+function setAccent(c){
+  const app=$("#app"); app.style.setProperty("--c1",c?c.colors[0]:"#1B4D8C"); app.style.setProperty("--c2",c?c.colors[1]:"#C22B2B");
+}
+
+/* ================= SCREENS ================= */
+function show(name,scroll=true){
+  ["Home","Quiz","Results"].forEach(s=>{ $("#screen"+s).hidden = s!==name; });
+  const hero=$("#hero"); hero.classList.toggle("compact", name!=="Home");
+  const c=state.country;
+  if(name==="Home"){
+    $("#heroKicker").textContent = c ? `TLV → ${c.flight.code} · ${c.flight.h}` : "TLV · יציאה מתל אביב";
+    $("#heroTitle").textContent = c ? c.he : "לאן טסים הפעם?";
+    $("#heroSub").textContent = c ? c.summary : "כתבו מדינה וקבלו מיד את כל המידע שצריך לפני הטיסה. אחר כך שאלון קצר, ובסופו מסלול והמלצות שמותאמים בדיוק לכם.";
+  } else if(name==="Quiz"){
+    $("#heroKicker").textContent = `${c.en.toUpperCase()} · התאמה אישית`;
+    $("#heroTitle").textContent = "בואו נכיר אתכם";
+    $("#heroSub").textContent = `חמש שאלות קצרות, ונבנה טיול ל${c.he} שמתאים בדיוק לכם.`;
+  } else {
+    $("#heroKicker").textContent = `TLV → ${c.flight.code} · ${state.nights} לילות`;
+    $("#heroTitle").textContent = c.he;
+    $("#heroSub").textContent = "המסלול וההמלצות שלכם, מסודרים לפי מה שהכי מתאים לכם.";
+  }
+  $("#heroPreview").textContent="";
+  if(scroll) window.scrollTo({top:0,behavior:reduceMotion.matches?"auto":"smooth"});
+}
+
+/* ================= HOME ================= */
+const input=$("#destInput"), list=$("#suggestList");
+let active=-1, idleTimer=0, idleIdx=0;
+
+function renderChips(){
+  $("#chips").innerHTML = C.map(c=>`<button type="button" class="chip" data-id="${c.id}" aria-pressed="${state.country===c}"><img src="${flagURI(c.id)}" alt="">${esc(c.he)}</button>`).join("");
+}
+function startIdle(){
+  stopIdle();
+  if(state.country) return;
+  idleTimer=setInterval(()=>{ if(state.country||input.value.trim()) return; idleIdx=(idleIdx+1)%C.length; Flag.set(C[idleIdx].id); $("#heroPreview").textContent=`${C[idleIdx].en.toUpperCase()} · ${C[idleIdx].he}`; },4200);
+}
+function stopIdle(){ clearInterval(idleTimer); }
+
+function openList(items){
+  if(!items.length){ closeList(); return; }
+  active=0;
+  list.innerHTML = items.map((c,i)=>`<li role="option" id="opt-${c.id}" data-id="${c.id}" aria-selected="${i===0}"><img src="${flagURI(c.id)}" alt=""><span>${esc(c.he)}</span><span class="en">${esc(c.en)}</span></li>`).join("");
+  list.hidden=false; input.setAttribute("aria-expanded","true"); input.setAttribute("aria-activedescendant","opt-"+items[0].id);
+}
+function closeList(){ list.hidden=true; active=-1; input.setAttribute("aria-expanded","false"); input.removeAttribute("aria-activedescendant"); }
+function moveActive(d){
+  const lis=$$("li",list); if(!lis.length) return;
+  active=(active+d+lis.length)%lis.length;
+  lis.forEach((li,i)=>li.setAttribute("aria-selected",i===active));
+  input.setAttribute("aria-activedescendant",lis[active].id);
+  Flag.set(lis[active].dataset.id);
+}
+
+input.addEventListener("input",()=>{
+  $("#notFound").innerHTML="";
+  const m=matches(input.value);
+  openList(m.slice(0,6));
+  if(m[0]){ Flag.set(m[0].id); $("#heroPreview").textContent=`${m[0].en.toUpperCase()} · ${m[0].he}`; $("#stubCode").textContent=m[0].flight.code; $("#stubFlight").textContent=m[0].flight.h; }
+  else if(!input.value.trim() && state.country){ Flag.set(state.country.id); }
+});
+input.addEventListener("keydown",e=>{
+  if(list.hidden) return;
+  if(e.key==="ArrowDown"){e.preventDefault();moveActive(1);}
+  else if(e.key==="ArrowUp"){e.preventDefault();moveActive(-1);}
+  else if(e.key==="Escape"){closeList();}
+  else if(e.key==="Enter"&&active>=0){e.preventDefault();const li=$$("li",list)[active];if(li) choose(byId[li.dataset.id]);}
+});
+input.addEventListener("blur",()=>setTimeout(closeList,150));
+list.addEventListener("mousedown",e=>{const li=e.target.closest("li");if(li){e.preventDefault();choose(byId[li.dataset.id]);}});
+
+$("#searchForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const q=input.value.trim();
+  if(!q){ input.focus(); input.placeholder="כתבו שם של מדינה, למשל יפן"; return; }
+  const c=exact(q)||matches(q)[0];
+  if(c){ choose(c); return; }
+  closeList();
+  const sug=closest(q);
+  $("#notFound").innerHTML=`<div class="notice" role="status">${ic("info")}<div><p><strong>עדיין אין לנו מידע מאומת על ״${esc(q)}״.</strong></p><p>אנחנו מציגים רק מידע שבדקנו, ולא ממציאים נתונים. אולי התכוונתם ל:</p><div class="chips" style="margin-top:10px">${sug.map(c=>`<button type="button" class="chip" data-id="${c.id}"><img src="${flagURI(c.id)}" alt="">${esc(c.he)}</button>`).join("")}</div></div></div>`;
+  if(state.country) Flag.set(state.country.id);
+});
+
+document.addEventListener("click",e=>{
+  const chip=e.target.closest(".chip[data-id]"); if(chip){ choose(byId[chip.dataset.id]); }
+});
+
+function choose(c){
+  if(!c) return;
+  closeList(); stopIdle();
+  const changed = state.country!==c;
+  state.country=c; input.value=c.he; $("#notFound").innerHTML="";
+  if(changed){ state.favs=new Set(); }
+  Flag.set(c.id); setAccent(c);
+  $("#stubCode").textContent=c.flight.code; $("#stubFlight").textContent=c.flight.h;
+  const pill=$("#destPill"); pill.hidden=false; pill.innerHTML=`<img src="${flagURI(c.id)}" alt="">${esc(c.he)}`;
+  renderChips(); renderProfile(); show("Home",false);
+  requestAnimationFrame(()=>{ const p=$("#profile"); if(p.firstElementChild) p.scrollIntoView({behavior:reduceMotion.matches?"auto":"smooth",block:"start"}); });
+}
+
+function renderProfile(){
+  const c=state.country, ti=timeInfo(c);
+  $("#profile").innerHTML=`
+  <div class="wrap section">
+    <div class="profile-head">
+      <div class="flag-tile"><img src="${flagURI(c.id)}" alt="הדגל של ${esc(c.he)}"></div>
+      <div style="min-width:0">
+        <span class="eyebrow">כרטיס מדינה</span>
+        <h2 class="p-name">${esc(c.he)}</h2>
+        <div class="p-en">${esc(c.en)} · בירה: ${esc(c.capital)}</div>
+      </div>
+      <div class="cta-row">
+        <button class="btn btn-sign" type="button" data-act="quiz">${ic("route")}<span>בניית מסלול אישי</span>${ic("arrow")}</button>
+      </div>
+    </div>
+    <div class="facts">
+      <div class="fact fact-time"><div class="fact-lbl">${ic("clock")}השעה עכשיו ב${esc(c.capital)}</div><div class="fact-val" id="liveTime">${ti.t}</div><div class="fact-sub" id="liveRel">יום ${esc(ti.day)} · ${esc(ti.rel)}${c.tzNote?". "+esc(c.tzNote):""}</div></div>
+      <div class="fact fact-emg"><div class="fact-lbl">${ic("phone")}מספרי חירום · לחיצה מעתיקה</div>
+        <div class="emg-list">${c.emergency.map(([n,l])=>`<div class="emg"><button type="button" class="emg-num${n.length>5?" long":""}" data-copy="${esc(n)}" aria-label="העתקת ${esc(n)}, ${esc(l)}">${esc(n)}</button><span class="emg-lbl">${esc(l)}</span></div>`).join("")}</div>
+        <div class="copied" id="copied" aria-live="polite"></div></div>
+      <div class="fact"><div class="fact-lbl">${ic("passport")}כניסה עם דרכון ישראלי</div><div class="fact-sub" style="color:var(--ink)">${esc(c.entry)}</div></div>
+      <div class="fact"><div class="fact-lbl">${ic("plane")}טיסה מתל אביב</div><div class="fact-val"><span class="route-code">TLV → ${esc(c.flight.code)}</span></div><div class="fact-sub">${esc(c.flight.h)} לנמל התעופה של ${esc(c.flight.city)}</div></div>
+      <div class="fact"><div class="fact-lbl">${ic("lang")}שפה</div><div class="fact-val">${esc(c.lang)}</div><div class="fact-sub">תודה: ${esc(c.thanks)}</div></div>
+      <div class="fact"><div class="fact-lbl">${ic("coins")}מטבע</div><div class="fact-val">${esc(c.currency)}</div></div>
+      <div class="fact"><div class="fact-lbl">${ic("plug")}חשמל ותקעים</div><div class="fact-val mono">${esc(c.plugs)}</div><div class="fact-sub">${esc(c.plugNote)}</div></div>
+      <div class="fact"><div class="fact-lbl">${ic("car")}נהיגה</div><div class="fact-val">בצד ${esc(c.drive)}</div><div class="fact-sub">${esc(c.driveNote)}</div></div>
+      <div class="fact"><div class="fact-lbl">${ic("sun")}מתי הכי כדאי</div><div class="fact-sub" style="color:var(--ink)">${esc(c.season)}</div></div>
+      <div class="fact"><div class="fact-lbl">${ic("receipt")}טיפים במסעדות</div><div class="fact-sub" style="color:var(--ink)">${esc(c.tipping)}</div></div>
+    </div>
+    <p class="disclaimer">${ic("info")}<span>המידע נאסף בקפידה, אבל דרישות כניסה ושעות פתיחה משתנים. לפני הטיסה בדקו באתר משרד החוץ ובאתרים הרשמיים של המדינה.</span></p>
+  </div>`;
+}
+
+let clockTimer=setInterval(()=>{
+  const c=state.country,el=$("#liveTime"); if(!c||!el) return;
+  const ti=timeInfo(c); el.textContent=ti.t; $("#liveRel").textContent=`יום ${ti.day} · ${ti.rel}${c.tzNote?". "+c.tzNote:""}`;
+},15000);
+
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-copy]"); if(!b) return;
+  const v=b.dataset.copy, out=$("#copied");
+  try{ await navigator.clipboard.writeText(v); out.textContent=`${v} הועתק`; }
+  catch(err){ const r=document.createRange(); r.selectNodeContents(b); const s=getSelection(); s.removeAllRanges(); s.addRange(r); out.textContent=`המספר ${v} מסומן. העתיקו עם Ctrl+C`; }
+});
+
+/* ================= QUIZ ================= */
+const QUIZ=[
+  {key:"type",title:"מי נוסע?",sub:"לפי זה נבחר אטרקציות, לינה וקצב.",kind:"radio",opts:[
+    {v:"couple",l:"זוג",d:"זמן ביחד, אוכל טוב ונוף",i:"heart"},
+    {v:"family",l:"משפחה עם ילדים",d:"אטרקציות לילדים ופחות נסיעות",i:"family"},
+    {v:"friends",l:"חברים",d:"בילויים, הרפתקאות ועלויות משותפות",i:"users"},
+    {v:"solo",l:"לבד",d:"גמישות מלאה ומפגשים בדרך",i:"user"}]},
+  {key:"nights",title:"כמה לילות?",sub:"לפי זה נחלק את המסלול לבסיסי לינה.",kind:"range"},
+  {key:"pace",title:"באיזה קצב?",sub:"כמה דברים בא לכם לעשות ביום?",kind:"radio",opts:[
+    {v:"relaxed",l:"רגוע",d:"דבר מרכזי אחד ביום, והרבה זמן פנוי",i:"coffee"},
+    {v:"balanced",l:"מאוזן",d:"שניים-שלושה דברים ביום",i:"scale"},
+    {v:"intensive",l:"אינטנסיבי",d:"מהבוקר עד הלילה, כמה שיותר",i:"bolt"}]},
+  {key:"interests",title:"מה הכי מושך אתכם?",sub:"אפשר לבחור כמה תחומים, לפחות אחד.",kind:"multi",opts:Object.entries(INT).map(([v,o])=>({v,l:o.l,i:o.i,d:{nature:"הרים, אגמים ושמורות",culture:"ערים עתיקות, מוזיאונים ואתרים",food:"שווקים, מסעדות ויקבים",beach:"חופים, מפרצים ושנורקל",roadtrip:"נסיעה עצמאית ועצירות בדרך",fun:"פארקים, מופעים וחיי לילה"}[v]}))},
+  {key:"budget",title:"מה התקציב?",sub:"נתאים את סוג הלינה, האטרקציות והמסעדות.",kind:"radio",opts:[
+    {v:"economy",l:"חסכוני",d:"הוסטלים, תחבורה ציבורית ואוכל רחוב",i:"wallet"},
+    {v:"comfort",l:"נוח",d:"מלון 3–4 כוכבים או דירה, מסעדות טובות",i:"star"},
+    {v:"luxury",l:"יוקרה",d:"מלונות בוטיק, מסעדות שף והסעות פרטיות",i:"gem"}]}
+];
+function renderQuiz(){
+  $("#qSteps").innerHTML = QUIZ.map((q,i)=>{
+    let body="";
+    if(q.kind==="range"){
+      body=`<div class="nights"><div class="nights-val"><span class="nights-num" id="nightsNum">${state.nights}</span><span class="nights-unit">לילות</span></div>
+        <label class="sr" for="nightsRange">מספר לילות</label>
+        <input type="range" id="nightsRange" min="3" max="21" step="1" value="${state.nights}">
+        <div class="quick" role="group" aria-label="בחירה מהירה">${[4,5,7,10,14].map(n=>`<button type="button" data-n="${n}" aria-pressed="${state.nights===n}">${n}</button>`).join("")}</div></div>`;
+    } else {
+      const multi=q.kind==="multi";
+      body=`<div class="opts" role="${multi?"group":"radiogroup"}" aria-labelledby="qt-${q.key}">${q.opts.map(o=>{
+        const checked = multi ? state.interests.includes(o.v) : state[q.key]===o.v;
+        return `<label class="opt ${multi?"multi":""}"><input type="${multi?"checkbox":"radio"}" name="${q.key}" id="${q.key}-${o.v}" value="${o.v}" ${checked?"checked":""}>
+          <span class="opt-ic">${ic(o.i)}</span><span><span class="opt-t">${esc(o.l)}</span><br><span class="opt-d">${esc(o.d)}</span></span><span class="opt-check">${ic("check")}</span></label>`;}).join("")}</div>`;
+    }
+    return `<div class="q-step" data-i="${i}" ${i===state.step?"":"hidden"}>
+      <div class="q-meta"><span class="eyebrow">שאלה ${i+1} מתוך ${QUIZ.length}</span></div>
+      <h2 class="q-title" id="qt-${q.key}">${esc(q.title)}</h2><p class="q-sub">${esc(q.sub)}</p>${body}</div>`;
+  }).join("");
+  updateQuiz();
+}
+function updateQuiz(){
+  $$(".q-step").forEach(s=>s.hidden=+s.dataset.i!==state.step);
+  $$("#qProgress span").forEach((s,i)=>s.classList.toggle("on",i<=state.step));
+  $("#qBack").querySelector("span").textContent = state.step===0 ? "לכרטיס המדינה" : "הקודם";
+  $("#qNextText").textContent = state.step===QUIZ.length-1 ? "הצגת המסלול שלי" : "הבא";
+  $("#qError").textContent="";
+}
+$("#qSteps").addEventListener("change",e=>{
+  const t=e.target;
+  if(t.name==="interests"){ state.interests=$$('input[name="interests"]:checked').map(x=>x.value); if(state.interests.length) $("#qError").textContent=""; }
+  else if(t.type==="radio"){ state[t.name]=t.value; }
+  savePrefs();
+});
+$("#qSteps").addEventListener("input",e=>{
+  if(e.target.id==="nightsRange"){ setNights(+e.target.value); }
+});
+$("#qSteps").addEventListener("click",e=>{ const b=e.target.closest("[data-n]"); if(b) setNights(+b.dataset.n); });
+function setNights(n){ state.nights=n; $("#nightsNum").textContent=n; $("#nightsRange").value=n; $$(".quick button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.n===n)); savePrefs(); }
+$("#qBack").addEventListener("click",()=>{ if(state.step===0){ show("Home"); return;} state.step--; updateQuiz(); });
+$("#quizForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const q=QUIZ[state.step];
+  if(q.key==="interests" && !state.interests.length){ $("#qError").textContent="בחרו לפחות תחום עניין אחד כדי שנוכל להתאים המלצות."; return; }
+  if(state.step<QUIZ.length-1){ state.step++; updateQuiz(); const f=$(`.q-step[data-i="${state.step}"] input`); f&&f.focus({preventScroll:true}); }
+  else { renderResults(); show("Results"); }
+});
+document.addEventListener("click",e=>{
+  const a=e.target.closest("[data-act]"); if(!a) return;
+  if(a.dataset.act==="quiz"){ state.step=0; renderQuiz(); show("Quiz"); }
+  if(a.dataset.act==="edit"){ state.step=0; renderQuiz(); show("Quiz"); }
+  if(a.dataset.act==="home"){ show("Home"); }
+});
+$("#brandBtn").addEventListener("click",()=>{ show("Home"); });
+$("#destPill").addEventListener("click",()=>{ show("Home"); });
+
+/* ================= RECOMMENDATION ENGINE ================= */
+function scorePlace(p){
+  let s=0; const why=[],warn=[];
+  const hits=p.t.filter(x=>state.interests.includes(x));
+  s+=hits.length*3; hits.forEach(h=>why.push(INT[h].l));
+  if(!hits.length) s-=2;
+  const who=p.w||["couple","family","friends","solo"];
+  if(!who.includes(state.type)){ s-=4; warn.push("פחות מתאים ל"+TYPE_L[state.type]); }
+  if(state.type==="family"&&p.kid){ s+=2; why.push("מתאים לילדים"); }
+  if(p.e===3){ if(state.pace==="relaxed"){s-=2;warn.push("דורש מאמץ פיזי");} else if(state.pace==="intensive"){s+=1;why.push("אתגר פיזי");} else warn.push("דורש כושר"); if(state.type==="family")s-=1; }
+  if(p.e===1&&state.pace==="relaxed"){ s+=1; why.push("נינוח"); }
+  if(p.c===3){ if(state.budget==="economy"){s-=2;warn.push("יקר יחסית");} else if(state.budget==="luxury"){s+=1;why.push("חוויית פרימיום");} }
+  if(p.c===1&&state.budget==="economy"){ s+=1; why.push("זול או חינם"); }
+  if(p.car){ if(state.interests.includes("roadtrip")){s+=1;why.push("מושלם לנסיעה");} else warn.push("הכי נוח עם רכב"); }
+  const pct=Math.max(30,Math.min(98,Math.round(58+s*6.5)));
+  return {...p,s,why,warn,pct};
+}
+function rankPlaces(c){ return c.places.map(scorePlace).sort((a,b)=>b.s-a.s||b.pct-a.pct); }
+function buildPlan(c,ranked){
+  const N=state.nights, per={relaxed:4,balanced:3,intensive:2}[state.pace], minN={relaxed:3,balanced:2,intensive:1}[state.pace];
+  const reg={}; ranked.forEach(p=>{(reg[p.r]=reg[p.r]||[]).push(Math.max(0,p.s)+0.5);});
+  const regs=Object.keys(reg).map(r=>({r,score:reg[r].sort((a,b)=>b-a).slice(0,3).reduce((a,b)=>a+b,0)})).sort((a,b)=>b.score-a.score);
+  let k=Math.max(1,Math.min(regs.length,Math.round(N/per)));
+  while(k>1&&k*minN>N) k--;
+  const chosen=regs.slice(0,k); chosen.forEach(x=>x.n=Math.min(minN,N));
+  let rem=N-chosen.reduce((a,b)=>a+b.n,0); const tot=chosen.reduce((a,b)=>a+b.score,0)||1;
+  const w=chosen.map(x=>{const f=x.score/tot*rem,a=Math.floor(f);x.n+=a;return {x,frac:f-a};});
+  rem=N-chosen.reduce((a,b)=>a+b.n,0); w.sort((a,b)=>b.frac-a.frac); for(let i=0;rem>0;i++,rem--) w[i%w.length].x.n++;
+  const order=c.regions.map(r=>r.n); chosen.sort((a,b)=>order.indexOf(a.r)-order.indexOf(b.r));
+  const perDay={relaxed:1,balanced:2,intensive:3}[state.pace]; let start=1;
+  return chosen.map(x=>{const o={...x,reg:c.regions.find(r=>r.n===x.r),places:ranked.filter(p=>p.r===x.r).slice(0,Math.max(1,Math.min(x.n*perDay,6))),from:start,to:start+x.n-1};start+=x.n;return o;});
+}
+function transportVerdict(c){
+  let s=c.transport.car; const why=[];
+  if(state.interests.includes("roadtrip")){s+=2;why.push("בחרתם בכבישי נוף");}
+  if(state.interests.includes("nature")){s+=0.5;why.push("הרבה מהטבע רחוק מתחבורה ציבורית");}
+  if(state.type==="family"){s+=1;why.push("עם ילדים רכב חוסך הרבה סחיבה");}
+  if(state.budget==="economy"){s-=1;why.push("בתקציב חסכוני תחבורה ציבורית זולה יותר");}
+  if(c.transport.car<=-1) why.push(`ב${c.he} התחבורה הציבורית מצוינת`);
+  if(c.transport.car>=2) why.push(`ב${c.he} המרחקים גדולים`);
+  const v = s>=2 ? "רכב שכור לרוב הטיול" : s>=0.5 ? "תחבורה ציבורית בערים, רכב לאזורי הטבע" : "תחבורה ציבורית, בלי רכב";
+  return {v,why};
+}
+const STAY_TYPE={
+  family:{economy:"דירה עם מטבח (Airbnb או Aparthotel), חוסכת בארוחות",comfort:"דירה או סוויטה משפחתית עם שני חדרי שינה",luxury:"סוויטה משפחתית במלון עם בריכה ומועדון ילדים"},
+  couple:{economy:"חדר פרטי ב-B&B או בפנסיון מקומי",comfort:"מלון בוטיק 4 כוכבים",luxury:"מלון בוטיק או 5 כוכבים עם נוף. לפחות לילה אחד מיוחד"},
+  friends:{economy:"חדר פרטי בהוסטל, או דירה משותפת",comfort:"דירה גדולה עם כמה חדרי שינה",luxury:"וילה או פנטהאוז משותף"},
+  solo:{economy:"הוסטל עם אווירה חברתית",comfort:"מלון קטן במרכז, ליד תחבורה ציבורית",luxury:"מלון בוטיק במרכז העיר"}
+};
+const TIPS_TYPE={
+  couple:["במקום לפזר את התקציב, שמרו לילה אחד מיוחד באמצע הטיול.","הזמינו מראש שולחן לשקיעה במקום אחד טוב."],
+  family:["בסיס לינה אחד לכמה לילות חוסך אריזות וגרירת ילדים.","כל 3–4 ימים, יום רגוע בלי תוכנית.","כיסא בטיחות מזמינים יחד עם הרכב, מראש."],
+  friends:["דירה משותפת זולה יותר מכמה חדרי מלון.","פתחו קבוצת הוצאות באפליקציה מהיום הראשון."],
+  solo:["בהוסטלים עם חדר פרטי יש פרטיות וגם קל להכיר אנשים.","שתפו את המסלול והמלון עם מישהו בבית."]
+};
+const TIPS_PACE={relaxed:"אתר מרכזי אחד ביום, ואת השאר משאירים לשוטטות.",balanced:"דבר אחד גדול בבוקר, ואחר הצהריים משהו קליל יותר.",intensive:"הזמינו כרטיסים לשעת הפתיחה הראשונה, אז התורים הכי קצרים."};
+const TIPS_BUDGET={economy:"טיסות ולינה באמצע השבוע זולות יותר. ארוחת הצהריים העיקרית זולה מארוחת ערב.",comfort:"השקיעו בלינה במיקום מרכזי. זה חוסך זמן ומוניות.",luxury:"מסעדות שף ופעילויות פרטיות מזמינים שבועות ואפילו חודשים מראש."};
+
+/* ================= RESULTS ================= */
+let currentTab="plan";
+function placeCard(p){
+  const fav=state.favs.has(p.n);
+  const q=encodeURIComponent(p.en);
+  return `<article class="card">
+    <div class="card-vis">${ic(INT[p.t[0]].i,"big")}<span class="rg">${esc(p.r)}</span><span class="match" aria-label="התאמה ${p.pct} אחוז">${p.pct}%<small>MATCH</small></span></div>
+    <div class="card-body">
+      <h3 class="card-t">${esc(p.n)}</h3><div class="card-en">${esc(p.en)}</div>
+      <p class="card-d">${esc(p.d)}</p>
+      <div class="why">${p.why.slice(0,3).map(w=>`<span>${esc(w)}</span>`).join("")}${p.warn.slice(0,2).map(w=>`<span class="w">${esc(w)}</span>`).join("")}</div>
+      ${p.note?`<div class="card-note">${ic("info")}<span>${esc(p.note)}</span></div>`:""}
+    </div>
+    <div class="card-foot">
+      <a class="lnk" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">${ic("pin")}במפה</a>
+      <a class="lnk" href="https://www.youtube.com/results?search_query=${encodeURIComponent(p.en+" travel")}" target="_blank" rel="noopener">${ic("play")}סרטונים</a>
+      <button type="button" class="fav" data-fav="${esc(p.n)}" aria-pressed="${fav}" aria-label="${fav?"הסרה מהרשימה":"שמירה לרשימה"}: ${esc(p.n)}">${ic("heart")}</button>
+    </div></article>`;
+}
+function renderResults(){
+  const c=state.country, ranked=rankPlaces(c), plan=buildPlan(c,ranked), tv=transportVerdict(c);
+  const stay=STAY_TYPE[state.type][state.budget];
+  const tabs=[["plan","מסלול","route"],["places","מקומות","pin"],["stay","לינה","bed"],["food","אוכל","food"],["move","התניידות","train"],["tips","טיפים","bulb"]];
+  const nightsTxt=n=>n===1?"לילה":"לילות";
+  $("#results").innerHTML=`
+    <div class="r-head">
+      <div style="min-width:0"><span class="eyebrow">המסלול שלכם</span><h2 class="r-title">${state.nights} לילות ב${esc(c.he)}</h2>
+        <div class="r-tags">
+          <span class="tag">${ic({couple:"heart",family:"family",friends:"users",solo:"user"}[state.type])}${TYPE_L[state.type]}</span>
+          <span class="tag">${ic({relaxed:"coffee",balanced:"scale",intensive:"bolt"}[state.pace])}${PACE_L[state.pace]}</span>
+          <span class="tag">${ic({economy:"wallet",comfort:"star",luxury:"gem"}[state.budget])}${BUDGET_L[state.budget]}</span>
+          ${state.interests.map(i=>`<span class="tag">${ic(INT[i].i)}${INT[i].l}</span>`).join("")}
+        </div></div>
+      <button class="btn btn-ghost" type="button" data-act="edit">${ic("edit")}<span>שינוי העדפות</span></button>
+    </div>
+    <div class="tabs-scroll"><div class="tabs" role="tablist" aria-label="חלקי ההמלצה">${tabs.map(([k,l,i])=>`<button class="tab" role="tab" id="tab-${k}" aria-controls="panel-${k}" aria-selected="${k===currentTab}" tabindex="${k===currentTab?0:-1}" data-tab="${k}">${ic(i)}${l}</button>`).join("")}</div></div>
+
+    <div class="panel" role="tabpanel" id="panel-plan" aria-labelledby="tab-plan" ${currentTab==="plan"?"":"hidden"}>
+      <p class="panel-intro">חילקנו את ${state.nights} הלילות ל-${plan.length} ${plan.length===1?"בסיס לינה":"בסיסי לינה"}, לפי האזורים שהכי מתאימים לכם ולפי הקצב שבחרתם.</p>
+      ${c.big&&plan.length>1?`<div class="plan-note">${ic("plane")}<span>המרחקים ב${esc(c.he)} גדולים. בין בסיסים רחוקים כדאי לטוס בטיסות פנים ולא לנסוע.</span></div>`:""}
+      <ol class="legs">${plan.map(l=>`<li class="leg">
+        <div class="leg-when"><div class="leg-n">${l.n}<small>${nightsTxt(l.n)}</small></div><div class="leg-range">${l.from===l.to?`לילה ${l.from}`:`לילות ${l.from}–${l.to}`}</div></div>
+        <div class="leg-card"><h3 class="leg-title">${esc(l.r)}</h3>
+          <div class="leg-stay">${ic("pin")}<span><strong style="color:var(--ink)">איפה:</strong> ${esc(l.reg.stay)}</span></div><div class="leg-stay">${ic("bed")}<span><strong style="color:var(--ink)">סוג לינה:</strong> ${esc(stay)}</span></div>
+          <ul class="leg-places">${l.places.map(p=>`<li>${ic(INT[p.t[0]].i)}<span class="nm">${esc(p.n)}</span><span class="pct">${p.pct}%</span></li>`).join("")}</ul>
+        </div></li>`).join("")}</ol>
+    </div>
+
+    <div class="panel" role="tabpanel" id="panel-places" aria-labelledby="tab-places" ${currentTab==="places"?"":"hidden"}>
+      <p class="panel-intro">כל המקומות שבחרנו ב${esc(c.he)}, מהמתאים ביותר לפחות מתאים. אחוז ההתאמה מחושב לפי התשובות שלכם.</p>
+      <div class="grid">${ranked.map(placeCard).join("")}</div>
+    </div>
+
+    <div class="panel" role="tabpanel" id="panel-stay" aria-labelledby="tab-stay" ${currentTab==="stay"?"":"hidden"}>
+      <div class="feature"><span class="eyebrow">ההמלצה שלנו בשבילכם</span><h3>${esc(stay)}</h3><p>ב${esc(c.he)}, ב${BUDGET_L[state.budget]}: ${esc(c.lodging[state.budget])}.</p></div>
+      <div class="cols" style="margin-bottom:16px"><div class="block"><h3>${ic("sparkle")}לינה מקומית מיוחדת</h3><p>${esc(c.lodging.special)}</p></div></div>
+      <div class="block"><h3>${ic("pin")}איפה לישון בכל אזור</h3>
+        ${c.regions.map(r=>`<div class="row-item"><div style="min-width:0"><h4>${esc(r.n)}${plan.some(l=>l.r===r.n)?' <span class="pill-cheap">במסלול שלכם</span>':""}</h4><p>${esc(r.stay)}</p></div>
+          <div class="row-links"><a class="lnk" href="https://www.booking.com/searchresults.html?ss=${encodeURIComponent(r.en)}" target="_blank" rel="noopener">${ic("search")}חיפוש לינה</a><a class="lnk" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.en)}" target="_blank" rel="noopener">${ic("pin")}מפה</a></div></div>`).join("")}
+      </div>
+    </div>
+
+    <div class="panel" role="tabpanel" id="panel-food" aria-labelledby="tab-food" ${currentTab==="food"?"":"hidden"}>
+      <p class="panel-intro">${state.interests.includes("food")?"בחרתם באוכל, אז הנה מה שאסור לפספס.":"גם אם אוכל הוא לא העיקר בטיול, את אלה כדאי לטעום."}${state.budget==="economy"?" סימנו מה זול במיוחד.":""}</p>
+      <div class="food-grid">${c.food.map(f=>`<div class="food"><h4>${esc(f.n)}${f.cheap&&state.budget==="economy"?'<span class="pill-cheap">זול</span>':""}</h4><span class="en">${esc(f.en)}</span><p>${esc(f.d)}</p><span class="where">${ic("pin")}${esc(f.where)}</span></div>`).join("")}</div>
+      <div class="block" style="margin-top:16px"><h3>${ic("food")}שומרים כשרות?</h3><p>${esc(c.kosher)}</p></div>
+    </div>
+
+    <div class="panel" role="tabpanel" id="panel-move" aria-labelledby="tab-move" ${currentTab==="move"?"":"hidden"}>
+      <div class="feature"><span class="verdict">${ic("check")}ההמלצה</span><h3>${esc(tv.v)}</h3>${tv.why.length?`<ul>${tv.why.map(w=>`<li>${esc(w)}</li>`).join("")}</ul>`:""}</div>
+      <div class="cols">
+        <div class="block"><h3>${ic("car")}ברכב</h3><p>${esc(c.transport.carText)}</p><p style="margin-top:8px">נוהגים בצד ${esc(c.drive)}. ${esc(c.driveNote)}</p></div>
+        <div class="block"><h3>${ic("train")}בתחבורה ציבורית</h3><p>${esc(c.transport.transit)}</p></div>
+      </div>
+    </div>
+
+    <div class="panel" role="tabpanel" id="panel-tips" aria-labelledby="tab-tips" ${currentTab==="tips"?"":"hidden"}>
+      <div class="cols">
+        <div class="block"><h3>${ic("bulb")}${esc(c.he)} מבפנים</h3><ul class="list">${c.tips.map(t=>`<li>${ic("check")}<span>${esc(t)}</span></li>`).join("")}</ul></div>
+        <div class="block"><h3>${ic("users")}בשבילכם</h3><ul class="list">${[...TIPS_TYPE[state.type],TIPS_PACE[state.pace],TIPS_BUDGET[state.budget]].map(t=>`<li>${ic("check")}<span>${esc(t)}</span></li>`).join("")}</ul></div>
+      </div>
+      <p class="disclaimer">${ic("info")}<span>לפני הטיסה: ביטוח נסיעות, צילום דרכון בטלפון, ובדיקת דרישות הכניסה העדכניות באתר משרד החוץ.</span></p>
+    </div>`;
+}
+function selectTab(k,focus){
+  currentTab=k;
+  $$(".tab").forEach(t=>{const on=t.dataset.tab===k;t.setAttribute("aria-selected",on);t.tabIndex=on?0:-1;if(on&&focus)t.focus();});
+  $$('[role="tabpanel"]').forEach(p=>p.hidden=p.id!=="panel-"+k);
+}
+$("#results").addEventListener("click",e=>{
+  const t=e.target.closest(".tab"); if(t){ selectTab(t.dataset.tab); return; }
+  const f=e.target.closest("[data-fav]");
+  if(f){ const n=f.dataset.fav; state.favs.has(n)?state.favs.delete(n):state.favs.add(n); const on=state.favs.has(n); f.setAttribute("aria-pressed",on); f.setAttribute("aria-label",(on?"הסרה מהרשימה":"שמירה לרשימה")+": "+n); }
+});
+$("#results").addEventListener("keydown",e=>{
+  const t=e.target.closest(".tab"); if(!t) return;
+  const tabs=$$(".tab"), i=tabs.indexOf(t);
+  let j=-1;
+  if(e.key==="ArrowLeft") j=(i+1)%tabs.length;      // RTL: left = next
+  else if(e.key==="ArrowRight") j=(i-1+tabs.length)%tabs.length;
+  else if(e.key==="Home") j=0; else if(e.key==="End") j=tabs.length-1;
+  if(j>=0){ e.preventDefault(); selectTab(tabs[j].dataset.tab,true); }
+});
+
+/* ================= BOOT ================= */
+renderChips();
+setAccent(null);
+Flag.set(C[0].id);
+$("#heroPreview").textContent=`${C[0].en.toUpperCase()} · ${C[0].he}`;
+startIdle();
+})();
+</script>
+
+</body></html>
